@@ -6,25 +6,17 @@
   <link rel="icon" type="image/png" href="/sob.png">
   <title>Converter thing</title>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: #2c3e50; color: #ecf0f1; }
+    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f4f6f8; color: #333; }
     nav { background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    nav a { margin-right: 15px; text-decoration: none; color: #ecf0f1; font-weight: bold; }
+    nav a { margin-right: 15px; text-decoration: none; color: #333; font-weight: bold; font-size: 18px; }
+    nav a.active { color: #0070f3; border-bottom: 2px solid #0070f3; padding-bottom: 5px; }
     .container { display: flex; gap: 20px; flex-wrap: wrap; }
-    .card { background: #34495e; padding: 20px; border-radius: 8px; flex: 1; min-width: 300px; }
-    input, select, button, textarea { width: 100%; margin-top: 10px; padding: 10px; border-radius: 5px; border: none; box-sizing: border-box; }
-    button { background: #3498db; color: white; font-weight: bold; cursor: pointer; }
-    button:hover { background: #2980b9; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex: 1; min-width: 300px; }
+    input, select, button, textarea { width: 100%; margin-top: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-size: 16px; }
+    button { background: #0070f3; color: white; font-weight: bold; cursor: pointer; border: none; }
+    button:hover { background: #0051a8; }
     textarea { height: 180px; background: #1e272e; color: #00ff88; font-family: monospace; margin-top: 10px; }
-    
-    /* 狀態顯示框樣式 */
-    .status-box {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: bold;
-      display: none; /* 預設隱藏 */
-    }
+    .status-box { margin-top: 15px; padding: 12px; border-radius: 5px; font-size: 14px; font-weight: bold; display: none; }
     .status-success { background: #27ae60; color: white; }
     .status-error { background: #e74c3c; color: white; }
     .status-info { background: #f39c12; color: white; }
