@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/sob.png">
-  <title>Trash</title>
+  <title>Useless Notepad</title>
   <style>
     :root {
       --bg-color: #f4f6f8;
@@ -12,6 +12,7 @@
       --text-color: #333333;
       --nav-bg: #ffffff;
       --border-color: #ccc;
+      --input-bg: #ffffff;
     }
     [data-theme="dark"] {
       --bg-color: #1a1a1a;
@@ -19,37 +20,178 @@
       --text-color: #f4f6f8;
       --nav-bg: #2d2d2d;
       --border-color: #444;
+      --input-bg: #222222;
     }
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: var(--bg-color); color: var(--text-color); transition: background 0.2s, color 0.2s; }
-    nav { background: var(--nav-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
-    nav a { margin-right: 15px; text-decoration: none; color: var(--text-color); font-weight: bold; font-size: 18px; }
-    nav a.active { color: #0070f3; border-bottom: 2px solid #0070f3; padding-bottom: 5px; }
-    .card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    textarea { width: 100%; height: 150px; padding: 10px; border-radius: 5px; border: 1px solid var(--border-color); box-sizing: border-box; font-size: 16px; background: var(--bg-color); color: var(--text-color); }
-    .theme-toggle-btn { position: absolute; top: 12px; right: 15px; background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+
+    * { box-sizing: border-box; }
+
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      margin: 0; 
+      padding: 20px; 
+      background: var(--bg-color); 
+      color: var(--text-color); 
+      transition: background 0.3s, color 0.3s; 
+    }
+
+    /* Mobile-friendly Responsive Nav Bar */
+    nav { 
+      background: var(--nav-bg); 
+      padding: 12px 20px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      margin-bottom: 25px; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    nav a { 
+      text-decoration: none; 
+      color: var(--text-color); 
+      font-weight: 600; 
+      font-size: 16px; 
+    }
+
+    nav a.active { 
+      color: #0070f3; 
+      border-bottom: 2px solid #0070f3; 
+      padding-bottom: 3px; 
+    }
+
+    .theme-toggle-btn { 
+      background: transparent; 
+      border: 1px solid var(--border-color); 
+      color: var(--text-color); 
+      padding: 8px 16px; 
+      border-radius: 20px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      transition: background 0.2s;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      .theme-toggle-btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    .card { 
+      background: var(--card-bg); 
+      padding: 25px; 
+      border-radius: 16px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+    }
+
+    textarea { 
+      width: 100%; 
+      height: 350px; 
+      padding: 15px; 
+      border-radius: 10px; 
+      border: 1px solid var(--border-color); 
+      background: var(--input-bg); 
+      color: var(--text-color); 
+      font-size: 16px; 
+      line-height: 1.5; 
+      resize: vertical; 
+      outline: none; 
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    button.action-btn { 
+      flex: 1;
+      min-width: 120px;
+      padding: 12px; 
+      border-radius: 8px; 
+      border: none; 
+      font-weight: bold; 
+      font-size: 15px; 
+      cursor: pointer; 
+      transition: opacity 0.2s; 
+    }
+
+    .btn-clear { background: #e74c3c; color: white; }
+    .btn-copy { background: #2ecc71; color: white; }
+    button.action-btn:hover { opacity: 0.9; }
+
+    .status-msg {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #2ecc71;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <nav>
-    <a href="/">Menu</a>
-    <a href="/tools.html">🛠️ Converter</a>
-    <a href="/notes.html" class="active">📝 Useless Notepad</a>
-    <a href="/fun.html">🎮 Playground</a>
+    <div class="nav-links">
+      <a href="/">Menu</a>
+      <a href="/tools.html">🛠️ Converter</a>
+      <a href="/notes.html" class="active">📝 Useless Notepad</a>
+      <a href="/fun.html">🎮 Playground</a>
+    </div>
     <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark</button>
   </nav>
 
-  <div class="card">
-    <h1>Temp notepad</h1>
-    <textarea placeholder="Type anything here, they will disappear after reload..."></textarea>
+  <div class="container">
+    <div class="card">
+      <h1 style="margin-top:0;">📝 Useless Notepad</h1>
+      <p style="opacity:0.7; margin-bottom:15px;">Auto-saves as you type locally in your browser.</p>
+      
+      <textarea id="noteInput" placeholder="Start typing here..."></textarea>
+      
+      <div class="btn-group">
+        <button class="action-btn btn-copy" onclick="copyText()">📋 Copy Text</button>
+        <button class="action-btn btn-clear" onclick="clearText()">🗑️ Clear</button>
+      </div>
+
+      <div id="statusMsg" class="status-msg"></div>
+    </div>
   </div>
 
   <script>
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     
+    const textarea = document.getElementById('noteInput');
+
     window.addEventListener('DOMContentLoaded', () => {
       const btn = document.getElementById('themeToggleBtn');
       if (btn) btn.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      
+      // Auto restore notes
+      textarea.value = localStorage.getItem('useless_notes') || '';
+    });
+
+    // Auto save notes
+    textarea.addEventListener('input', () => {
+      localStorage.setItem('useless_notes', textarea.value);
     });
 
     function toggleTheme() {
@@ -57,9 +199,30 @@
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
-      
       const btn = document.getElementById('themeToggleBtn');
       if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+    }
+
+    function copyText() {
+      if (!textarea.value) return;
+      textarea.select();
+      document.execCommand('copy');
+      showMsg('Copied to clipboard!');
+    }
+
+    function clearText() {
+      if (confirm('Clear notepad content?')) {
+        textarea.value = '';
+        localStorage.removeItem('useless_notes');
+        showMsg('Notepad cleared!');
+      }
+    }
+
+    function showMsg(msg) {
+      const el = document.getElementById('statusMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 2000);
     }
   </script>
 </body>
