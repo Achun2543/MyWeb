@@ -6,17 +6,120 @@
   <link rel="icon" type="image/png" href="/sob.png">
   <title>Converter thing</title>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f4f6f8; color: #333; }
-    nav { background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    nav a { margin-right: 15px; text-decoration: none; color: #333; font-weight: bold; font-size: 18px; }
-    nav a.active { color: #0070f3; border-bottom: 2px solid #0070f3; padding-bottom: 5px; }
+    :root {
+      --bg-color: #f4f6f8;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --nav-bg: #ffffff;
+      --border-color: #ccc;
+      --input-bg: #ffffff;
+    }
+    [data-theme="dark"] {
+      --bg-color: #1a1a1a;
+      --card-bg: #2d2d2d;
+      --text-color: #f4f6f8;
+      --nav-bg: #2d2d2d;
+      --border-color: #444;
+      --input-bg: #3d3d3d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      margin: 0; 
+      padding: 20px; 
+      background: var(--bg-color); 
+      color: var(--text-color); 
+      transition: background 0.3s, color 0.3s; 
+    }
+
+    /* Fixed Flex Navigation Header */
+    nav { 
+      background: var(--nav-bg); 
+      padding: 12px 20px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      margin-bottom: 25px; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    nav a { 
+      text-decoration: none; 
+      color: var(--text-color); 
+      font-weight: 600; 
+      font-size: 16px; 
+    }
+
+    nav a.active { 
+      color: #0070f3; 
+      border-bottom: 2px solid #0070f3; 
+      padding-bottom: 3px; 
+    }
+
+    .theme-toggle-btn { 
+      background: transparent; 
+      border: 1px solid var(--border-color); 
+      color: var(--text-color); 
+      padding: 8px 16px; 
+      border-radius: 20px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      transition: background 0.2s;
+    }
+
     .container { display: flex; gap: 20px; flex-wrap: wrap; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex: 1; min-width: 300px; }
-    input, select, button, textarea { width: 100%; margin-top: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-size: 16px; }
-    button { background: #0070f3; color: white; font-weight: bold; cursor: pointer; border: none; }
+    .card { 
+      background: var(--card-bg); 
+      padding: 25px; 
+      border-radius: 16px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      flex: 1; 
+      min-width: 300px; 
+    }
+
+    input, select, button, textarea { 
+      width: 100%; 
+      margin-top: 10px; 
+      padding: 10px; 
+      border-radius: 6px; 
+      border: 1px solid var(--border-color); 
+      box-sizing: border-box; 
+      font-size: 16px; 
+      background: var(--input-bg);
+      color: var(--text-color);
+    }
+
+    button { 
+      background: #0070f3; 
+      color: white; 
+      font-weight: bold; 
+      cursor: pointer; 
+      border: none; 
+      transition: background 0.2s;
+    }
     button:hover { background: #0051a8; }
-    textarea { height: 180px; background: #1e272e; color: #00ff88; font-family: monospace; margin-top: 10px; }
-    .status-box { margin-top: 15px; padding: 12px; border-radius: 5px; font-size: 14px; font-weight: bold; display: none; }
+
+    textarea { 
+      height: 180px; 
+      background: #1e272e; 
+      color: #00ff88; 
+      font-family: monospace; 
+      margin-top: 10px; 
+    }
+
+    .status-box { margin-top: 15px; padding: 12px; border-radius: 6px; font-size: 14px; font-weight: bold; display: none; }
     .status-success { background: #27ae60; color: white; }
     .status-error { background: #e74c3c; color: white; }
     .status-info { background: #f39c12; color: white; }
@@ -24,10 +127,13 @@
 </head>
 <body>
   <nav>
-    <a href="/">Menu</a>
-    <a href="/tools.html" class="active">🛠️ Converter</a>
-    <a href="/notes.html">📝 Useless Notepad</a>
-    <a href="/fun.html">🎮 Playground</a>
+    <div class="nav-links">
+      <a href="/">Menu</a>
+      <a href="/tools.html" class="active">🛠️ Converter</a>
+      <a href="/notes.html">📝 Useless Notepad</a>
+      <a href="/fun.html">🎮 Playground</a>
+    </div>
+    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark</button>
   </nav>
 
   <h1>Image to Build Logic string converter</h1>
@@ -68,6 +174,25 @@
   <canvas id="canvas" style="display:none;"></canvas>
 
   <script>
+    // Theme Switch Logic
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+    });
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+    }
+
+    // Converter Logic
     const BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#$";
 
     function showStatus(text, type) {
