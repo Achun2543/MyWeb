@@ -100,7 +100,7 @@
     function processImage() {
       const fileInput = document.getElementById('imageInput');
       if (!fileInput.files[0]) {
-        showStatus('⚠️ You did NOT input an image', 'error');
+        showStatus('You did NOT input an image', 'error');
         return;
       }
 
@@ -134,18 +134,18 @@
         }
 
         document.getElementById('resultText').value = blocks.join(';');
-        showStatus(`✅ Convert success, generated ${blocks.length.toLocaleString()} blocks.`, 'success');
+        showStatus(`Convert success, generated ${blocks.length.toLocaleString()} blocks.`, 'success');
       };
 
       img.onerror = () => {
-        showStatus('❌ IMAGE LOAD FAILURE, change another image', 'error');
+        showStatus('IMAGE LOAD FAILURE, change another image', 'error');
       };
     }
 
     function copyCode() {
       const textarea = document.getElementById('resultText');
       if (!textarea.value) {
-        showStatus('⚠️ PLS UPLOAD THE IMAGE PROPERLY', 'error');
+        showStatus('PLS UPLOAD THE IMAGE PROPERLY', 'error');
         return;
       }
       textarea.select();
