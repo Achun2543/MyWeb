@@ -31,20 +31,20 @@
 </head>
 <body>
   <nav>
-    <a href="/">🏠 首頁</a>
-    <a href="/tools.html" style="color: #3498db;">🛠️ 圖片轉代碼工具</a>
-    <a href="/notes.html">📝 筆記頁</a>
+    <a href="/">Menu</a>
+    <a href="/tools.html" style="color: #3498db;">🛠️ Converter</a>
+    <a href="/notes.html">📝 Useless Notepad</a>
   </nav>
 
   <h1>BUILD A LOGIC CONVERTER (Web Edition)</h1>
 
   <div class="container">
     <div class="card">
-      <h3>1. 上傳圖片</h3>
+      <h3>1. Upload image</h3>
       <input type="file" id="imageInput" accept="image/*">
       
-      <h3 style="margin-top: 20px;">2. 設定</h3>
-      <label>尺寸 (Wall Size):</label>
+      <h3 style="margin-top: 20px;">2. Setting</h3>
+      <label>Size (Wall Size):</label>
       <select id="wallSize">
         <option value="64">64</option>
         <option value="128" selected>128</option>
@@ -52,22 +52,22 @@
         <option value="256">256</option>
       </select>
 
-      <label style="margin-top: 10px; display:block;">模式:</label>
+      <label style="margin-top: 10px; display:block;">Mode:</label>
       <select id="mode">
         <option value="normal">Normal (1x)</option>
         <option value="micro">Micro Blocks (4x)</option>
       </select>
 
-      <button id="convertBtn" onclick="processImage()">🚀 開始轉換代碼</button>
+      <button id="convertBtn" onclick="processImage()">🚀 Start converting</button>
       
       <!-- 網頁內嵌狀態訊息框 -->
       <div id="statusBox" class="status-box"></div>
     </div>
 
     <div class="card">
-      <h3>3. 轉換結果</h3>
+      <h3>3. Result:</h3>
       <textarea id="resultText" placeholder="轉換後的代碼會顯示在這裡..." readonly></textarea>
-      <button onclick="copyCode()" style="background: #2ecc71;">📋 複製代碼</button>
+      <button onclick="copyCode()" style="background: #2ecc71;">📋 Copy String</button>
     </div>
   </div>
 
@@ -132,23 +132,23 @@
         }
 
         document.getElementById('resultText').value = blocks.join(';');
-        showStatus(`✅ 轉換成功！共產生 ${blocks.length.toLocaleString()} 個方塊代碼。`, 'success');
+        showStatus(`✅ Convert success, generated ${blocks.length.toLocaleString()} blocks.`, 'success');
       };
 
       img.onerror = () => {
-        showStatus('❌ 圖片載入失敗，請換一張圖片再試。', 'error');
+        showStatus('❌ IMAGE LOAD FAILURE, change another image', 'error');
       };
     }
 
     function copyCode() {
       const textarea = document.getElementById('resultText');
       if (!textarea.value) {
-        showStatus('⚠️ 沒有可複製的代碼，請先轉換圖片！', 'error');
+        showStatus('⚠️ PLS UPLOAD THE IMAGE PROPERLY', 'error');
         return;
       }
       textarea.select();
       document.execCommand('copy');
-      showStatus('📋 代碼已成功複製到剪貼簿！', 'success');
+      showStatus('📋 String copied to clipboard!', 'success');
     }
   </script>
 </body>
