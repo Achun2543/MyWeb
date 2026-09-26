@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Useless Playground</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 20px; background: #2c3e50; color: #ecf0f1; transition: background 0.3s; }
+    nav { background: #34495e; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    nav a { margin-right: 15px; text-decoration: none; color: #ecf0f1; font-weight: bold; }
+    nav a.active { color: #3498db; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .card { background: #34495e; padding: 20px; border-radius: 8px; text-align: center; position: relative; overflow: hidden; }
+
+    /* Switch styling */
+    .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin-top: 10px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #e74c3c; }
+    input:checked + .slider:before { transform: translateX(26px); }
+
+    /* Button styling */
+    button { background: #3498db; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 10px; transition: transform 0.1s; }
+    button:active { transform: scale(0.95); }
+    .score { font-size: 24px; font-weight: bold; color: #2ecc71; margin-top: 10px; }
+
+    /* Dodging button styling */
+    #runawayBtn {
+      position: absolute;
+      transition: all 0.15s ease-out;
+      background: #e67e22;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/tools.html">🛠️ Converter</a>
+    <a href="/notes.html">📝 Useless Notepad</a>
+    <a href="/fun.html" class="active">🎮 Playground</a>
+  </nav>
+
+  <h1>🎮 Useless Buttons & Switches Playground</h1>
+  <p>None of these controls serve any functional purpose. Enjoy the satisfaction of clicking.</p>
+
+  <div class="grid">
+    <!-- 1. Stubborn Switch -->
+    <div class="card">
+      <h3>1. The Stubborn Switch</h3>
+      <p>Try switching it ON:</p>
+      <label class="switch">
+        <input type="checkbox" id="uselessSwitch" onchange="autoTurnOff(this)">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 2. Aura Clicker -->
+    <div class="card">
+      <h3>2. Aura Clicker</h3>
+      <p>Click to gain Aura points:</p>
+      <button onclick="addAura()">Collect Aura ✨</button>
+      <div id="auraCount" class="score">Aura: 0</div>
+    </div>
+
+    <!-- 3. Random Color Generator -->
+    <div class="card">
+      <h3>3. Background Color Switcher</h3>
+      <p>Click to change the site color theme:</p>
+      <button onclick="changeBg()" style="background: #9b59b6;">Change Color 🎨</button>
+    </div>
+
+    <!-- 4. Unclickable Button -->
+    <div class="card" id="evadeContainer" style="min-height: 180px;">
+      <h3>4. You Can't Click Me</h3>
+      <p>Try hovering or clicking on it:</p>
+      <button id="runawayBtn" style="left: 35%; top: 55%;">Catch Me!</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Switch auto shut-off
+    function autoTurnOff(el) {
+      if (el.checked) {
+        setTimeout(() => {
+          el.checked = false;
+        }, 250);
+      }
+    }
+
+    // 2. Aura Clicker
+    let aura = 0;
+    function addAura() {
+      aura += 100;
+      document.getElementById('auraCount').textContent = `Aura: +${aura.toLocaleString()}`;
+    }
+
+    // 3. Random background color
+    function changeBg() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+  
+      document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+    }
+
+    // 4. Fixed Dodge Mechanics
+    const btn = document.getElementById('runawayBtn');
+    const container = document.getElementById('evadeContainer');
+
+    btn.addEventListener('mouseenter', moveButton);
+    btn.addEventListener('mousemove', moveButton);
+
+    function moveButton() {
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+
+      // Calculate maximum allowed coordinates inside the card container
+      const maxX = containerRect.width - btnRect.width - 20;
+      const maxY = containerRect.height - btnRect.height - 20;
+
+      // Generate new positions guaranteed to be away from current position
+      let newX = Math.max(10, Math.floor(Math.random() * maxX));
+      let newY = Math.max(50, Math.floor(Math.random() * maxY));
+
+      btn.style.left = `${newX}px`;
+      btn.style.top = `${newY}px`;
+    }
+  </script>
+</body>
+</html>
