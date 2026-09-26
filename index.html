@@ -6,11 +6,26 @@
   <link rel="icon" type="image/png" href="/sob.png">
   <title>hi im tab name what</title>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f4f6f8; }
-    nav { background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    nav a { margin-right: 15px; text-decoration: none; color: #333; font-weight: bold; font-size: 18px; }
+    :root {
+      --bg-color: #f4f6f8;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --nav-bg: #ffffff;
+      --border-color: #ccc;
+    }
+    [data-theme="dark"] {
+      --bg-color: #1a1a1a;
+      --card-bg: #2d2d2d;
+      --text-color: #f4f6f8;
+      --nav-bg: #2d2d2d;
+      --border-color: #444;
+    }
+    body { font-family: sans-serif; margin: 0; padding: 20px; background: var(--bg-color); color: var(--text-color); transition: background 0.2s, color 0.2s; }
+    nav { background: var(--nav-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
+    nav a { margin-right: 15px; text-decoration: none; color: var(--text-color); font-weight: bold; font-size: 18px; }
     nav a.active { color: #0070f3; border-bottom: 2px solid #0070f3; padding-bottom: 5px; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .theme-toggle-btn { position: absolute; top: 12px; right: 15px; background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -19,11 +34,32 @@
     <a href="/tools.html">🛠️ Converter</a>
     <a href="/notes.html">📝 Useless Notepad</a>
     <a href="/fun.html">🎮 Playground</a>
+    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark</button>
   </nav>
 
   <div class="card">
     <h1>Slime's secret base // Entrence</h1>
     <p>Bruh I know ts ain't even secret but don't mind it</p>
   </div>
+
+  <script>
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+    });
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+    }
+  </script>
 </body>
 </html>
