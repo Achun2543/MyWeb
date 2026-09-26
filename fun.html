@@ -20,87 +20,220 @@
       --nav-bg: #2d2d2d;
       --border-color: #444;
     }
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: var(--bg-color); color: var(--text-color); transition: background 0.3s, color 0.3s; }
-    nav { background: var(--nav-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
-    nav a { margin-right: 15px; text-decoration: none; color: var(--text-color); font-weight: bold; font-size: 18px; }
-    nav a.active { color: #0070f3; border-bottom: 2px solid #0070f3; padding-bottom: 5px; }
+    
+    * { box-sizing: border-box; }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      margin: 0; 
+      padding: 20px; 
+      background: var(--bg-color); 
+      color: var(--text-color); 
+      transition: background 0.3s, color 0.3s; 
+    }
+
+    /* Fixed Nav Layout */
+    nav { 
+      background: var(--nav-bg); 
+      padding: 12px 20px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      margin-bottom: 25px; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    nav a { 
+      text-decoration: none; 
+      color: var(--text-color); 
+      font-weight: 600; 
+      font-size: 16px; 
+    }
+
+    nav a.active { 
+      color: #0070f3; 
+      border-bottom: 2px solid #0070f3; 
+      padding-bottom: 3px; 
+    }
+
+    .theme-toggle-btn { 
+      background: transparent; 
+      border: 1px solid var(--border-color); 
+      color: var(--text-color); 
+      padding: 8px 16px; 
+      border-radius: 20px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      transition: background 0.2s;
+    }
+
+    /* Grid Layout */
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 25px; 
+    }
+
+    .card { 
+      background: var(--card-bg); 
+      padding: 25px 20px; 
+      border-radius: 16px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      text-align: center; 
+      position: relative; 
+      overflow: hidden; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: space-between; 
+      min-height: 220px;
+    }
+
+    .card h3 { margin: 0 0 8px 0; font-size: 18px; }
+    .card p { margin: 0 0 15px 0; opacity: 0.8; font-size: 14px; }
 
     /* Switch styling */
-    .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin-top: 10px; }
+    .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin: 10px 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
     .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #e74c3c; }
     input:checked + .slider:before { transform: translateX(26px); }
 
-    button { background: #0070f3; color: white; border: none; padding: 10px 18px; font-size: 15px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 10px; transition: transform 0.1s; }
-    button:active { transform: scale(0.95); }
-    .score { font-size: 22px; font-weight: bold; color: #2ecc71; margin-top: 10px; }
+    button.action-btn { 
+      background: #0070f3; 
+      color: white; 
+      border: none; 
+      padding: 10px 20px; 
+      font-size: 15px; 
+      font-weight: bold; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      transition: transform 0.1s, opacity 0.2s; 
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button.action-btn:active { transform: scale(0.95); }
+    .score { font-size: 24px; font-weight: bold; color: #2ecc71; margin-top: 10px; }
 
-    /* Pop It Grid */
-    .pop-it-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-    .pop-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: #ff4757; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.1s ease; }
-    .pop-btn.popped { background: #2ed573; box-shadow: inset 0 4px 0 rgba(0,0,0,0.3); transform: scale(0.9); }
+    /* Pop It Grid (Retains original colors on press) */
+    .pop-it-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 10px 0; }
+    .pop-btn { 
+      width: 50px; 
+      height: 50px; 
+      border-radius: 50%; 
+      border: none; 
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,0.25), 0 4px 8px rgba(0,0,0,0.15); 
+      cursor: pointer; 
+      transition: transform 0.1s ease, filter 0.1s ease, box-shadow 0.1s ease; 
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pop-btn.popped { 
+      box-shadow: inset 0 4px 6px rgba(0,0,0,0.4); 
+      transform: scale(0.92); 
+      filter: brightness(0.75); 
+    }
 
-    /* Spinner */
-    .spinner { font-size: 50px; cursor: pointer; display: inline-block; user-select: none; transition: transform 0.1s linear; margin-top: 10px; }
+    /* Velocity Spinner */
+    .spinner-container { width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; touch-action: none; }
+    .spinner { font-size: 60px; cursor: grab; user-select: none; display: inline-block; -webkit-tap-highlight-color: transparent; }
+    .spinner:active { cursor: grabbing; }
 
     /* Bubble Wrap */
-    .bubble-wrap { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
-    .bubble { width: 35px; height: 35px; background: rgba(255, 255, 255, 0.4); border: 2px solid #3498db; border-radius: 50%; cursor: pointer; box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1); }
-    .bubble.popped { background: transparent; border-color: #ccc; box-shadow: none; transform: scale(0.85); }
+    .bubble-wrap { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
+    .bubble { 
+      width: 40px; 
+      height: 40px; 
+      background: rgba(255, 255, 255, 0.4); 
+      border: 2px solid #3498db; 
+      border-radius: 50%; 
+      cursor: pointer; 
+      box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1); 
+      transition: transform 0.1s, border-color 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bubble.popped { background: transparent; border-color: #aaa; box-shadow: none; transform: scale(0.85); opacity: 0.5; }
 
     /* Stress Ball */
-    .stress-ball { width: 70px; height: 70px; background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253); border-radius: 50%; cursor: grab; margin-top: 10px; transition: transform 0.1s ease; box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+    .stress-ball-container { height: 90px; display: flex; align-items: center; justify-content: center; }
+    .stress-ball { 
+      width: 75px; 
+      height: 75px; 
+      background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253); 
+      border-radius: 50%; 
+      cursor: grab; 
+      transition: transform 0.1s ease; 
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2); 
+      user-select: none;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
     .stress-ball:active { transform: scale(0.6, 1.3); cursor: grabbing; }
 
     #runawayBtn { position: absolute; transition: all 0.15s ease-out; background: #e67e22; z-index: 10; width: auto; }
-    .theme-toggle-btn { position: absolute; top: 12px; right: 15px; background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; width: auto; }
   </style>
 </head>
 <body>
   <nav>
-    <a href="/">Menu</a>
-    <a href="/tools.html">🛠️ Converter</a>
-    <a href="/notes.html">📝 Useless Notepad</a>
-    <a href="/fun.html" class="active">🎮 Playground</a>
+    <div class="nav-links">
+      <a href="/">Menu</a>
+      <a href="/tools.html">🛠️ Converter</a>
+      <a href="/notes.html">📝 Useless Notepad</a>
+      <a href="/fun.html" class="active">🎮 Playground</a>
+    </div>
     <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark</button>
   </nav>
 
-  <h1>🎮 Useless Fidgets & Toy Box</h1>
-  <p>Pure stress relief, absolute zero productivity.</p>
+  <h1 style="margin-bottom: 5px;">🎮 Useless Fidgets & Toy Box</h1>
+  <p style="margin-top: 0; opacity: 0.7; margin-bottom: 25px;">Pure stress relief, absolute zero productivity.</p>
 
   <div class="grid">
     <!-- 1. Pop It Toy -->
     <div class="card">
-      <h3>1. Pop It Toy 🟪</h3>
-      <p>Pop all the bubbles:</p>
-      <div class="pop-it-grid">
-        <button class="pop-btn" onclick="popBubble(this)"></button>
-        <button class="pop-btn" onclick="popBubble(this)" style="background:#ffa502;"></button>
-        <button class="pop-btn" onclick="popBubble(this)" style="background:#2ed573;"></button>
-        <button class="pop-btn" onclick="popBubble(this)" style="background:#1e90ff;"></button>
-        <button class="pop-btn" onclick="popBubble(this)" style="background:#3742fa;"></button>
-        <button class="pop-btn" onclick="popBubble(this)" style="background:#10ac84;"></button>
+      <div>
+        <h3>1. Pop It Toy 🟪</h3>
+        <p>Pop all the bubbles:</p>
       </div>
-      <button onclick="resetPopIt()" style="font-size: 12px; padding: 4px 8px; margin-top: 15px;">Reset Pop It</button>
+      <div class="pop-it-grid">
+        <button class="pop-btn" style="background:#ff4757;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#ffa502;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#2ed573;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#1e90ff;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#3742fa;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#9b59b6;" onclick="popBubble(this)"></button>
+      </div>
+      <button class="action-btn" onclick="resetPopIt()" style="font-size: 12px; padding: 6px 12px; background: #718093;">Reset Pop It</button>
     </div>
 
-    <!-- 2. Fidget Spinner -->
+    <!-- 2. Velocity Fidget Spinner -->
     <div class="card">
-      <h3>2. Fidget Spinner 🌀</h3>
-      <p>Hover fast to spin it!</p>
-      <div class="spinner" id="spinner" onmousemove="spin()">⚙️</div>
+      <div>
+        <h3>2. Fidget Spinner 🌀</h3>
+        <p>Flick or drag fast to spin!</p>
+      </div>
+      <div class="spinner-container" id="spinnerZone">
+        <div class="spinner" id="spinner">⚙️</div>
+      </div>
+      <div></div>
     </div>
 
     <!-- 3. Infinite Bubble Wrap -->
     <div class="card">
-      <h3>3. Infinite Bubble Wrap 🫧</h3>
-      <p>Pop for endless satisfaction:</p>
-      <div class="bubble-wrap" id="bubbleWrap">
+      <div>
+        <h3>3. Infinite Bubble Wrap 🫧</h3>
+        <p>Pop for endless satisfaction:</p>
+      </div>
+      <div class="bubble-wrap">
         <div class="bubble" onclick="popWrap(this)"></div>
         <div class="bubble" onclick="popWrap(this)"></div>
         <div class="bubble" onclick="popWrap(this)"></div>
@@ -108,45 +241,62 @@
         <div class="bubble" onclick="popWrap(this)"></div>
         <div class="bubble" onclick="popWrap(this)"></div>
       </div>
+      <div></div>
     </div>
 
     <!-- 4. Stress Ball -->
     <div class="card">
-      <h3>4. Squeeze Stress Ball 🔴</h3>
-      <p>Click and hold to squish:</p>
-      <div class="stress-ball"></div>
+      <div>
+        <h3>4. Squeeze Stress Ball 🔴</h3>
+        <p>Click/Touch and hold to squish:</p>
+      </div>
+      <div class="stress-ball-container">
+        <div class="stress-ball"></div>
+      </div>
+      <div></div>
     </div>
 
     <!-- 5. Stubborn Switch -->
     <div class="card">
-      <h3>5. The Stubborn Switch 🔌</h3>
-      <p>Try switching it ON:</p>
+      <div>
+        <h3>5. The Stubborn Switch 🔌</h3>
+        <p>Try switching it ON:</p>
+      </div>
       <label class="switch">
         <input type="checkbox" id="uselessSwitch" onchange="autoTurnOff(this)">
         <span class="slider"></span>
       </label>
+      <div></div>
     </div>
 
     <!-- 6. Aura Clicker -->
     <div class="card">
-      <h3>6. Aura Clicker ✨</h3>
-      <p>Click to gain Aura points:</p>
-      <button onclick="addAura()">Collect Aura ✨</button>
+      <div>
+        <h3>6. Aura Clicker ✨</h3>
+        <p>Click to gain Aura points:</p>
+      </div>
+      <button class="action-btn" onclick="addAura()">Collect Aura ✨</button>
       <div id="auraCount" class="score">Aura: 0</div>
     </div>
 
     <!-- 7. Color Switcher -->
     <div class="card">
-      <h3>7. Color Theme Switcher 🎨</h3>
-      <p>Randomize background tint:</p>
-      <button onclick="changeBg()" style="background: #9b59b6;">Change Color 🎨</button>
+      <div>
+        <h3>7. Color Theme Switcher 🎨</h3>
+        <p>Randomize background tint:</p>
+      </div>
+      <button class="action-btn" onclick="changeBg()" style="background: #9b59b6;">Change Color 🎨</button>
+      <div></div>
     </div>
 
     <!-- 8. Unclickable Button -->
-    <div class="card" id="evadeContainer" style="min-height: 180px;">
-      <h3>8. You Can't Click Me 🏃</h3>
-      <p>Try hovering or clicking on it:</p>
-      <button id="runawayBtn" style="left: 35%; top: 55%;">Catch Me!</button>
+    <div class="card" id="evadeContainer" style="min-height: 220px;">
+      <div>
+        <h3>8. You Can't Click Me 🏃</h3>
+        <p>Try hovering or touching it:</p>
+      </div>
+      <button class="action-btn" id="runawayBtn" style="left: 35%; top: 55%;">Catch Me!</button>
+      <div></div>
     </div>
   </div>
 
@@ -178,20 +328,61 @@
       document.querySelectorAll('.pop-btn').forEach(btn => btn.classList.remove('popped'));
     }
 
-    // 2. Fidget Spinner Mechanics
-    let rotation = 0;
-    function spin() {
-      rotation += 45;
-      document.getElementById('spinner').style.transform = `rotate(${rotation}deg)`;
+    // 2. Velocity-based Fidget Spinner
+    const spinner = document.getElementById('spinner');
+    const spinnerZone = document.getElementById('spinnerZone');
+    let angle = 0;
+    let velocity = 0;
+    let lastPos = { x: 0, y: 0 };
+    let lastTime = Date.now();
+
+    function updateSpinner() {
+      if (Math.abs(velocity) > 0.1) {
+        angle += velocity;
+        velocity *= 0.96; // Physics Friction
+        spinner.style.transform = `rotate(${angle}deg)`;
+      } else {
+        velocity = 0;
+      }
+      requestAnimationFrame(updateSpinner);
     }
+    updateSpinner();
+
+    function handlePointerMove(clientX, clientY) {
+      const now = Date.now();
+      const dt = now - lastTime;
+      if (dt > 0) {
+        const dx = clientX - lastPos.x;
+        const dy = clientY - lastPos.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const speed = dist / dt;
+        
+        // Add spin direction & velocity based on movement speed
+        if (speed > 0.2) {
+          velocity += speed * 2;
+        }
+      }
+      lastPos = { x: clientX, y: clientY };
+      lastTime = now;
+    }
+
+    spinnerZone.addEventListener('mousemove', (e) => {
+      handlePointerMove(e.clientX, e.clientY);
+    });
+
+    spinnerZone.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
 
     // 3. Bubble Wrap Mechanics
     function popWrap(el) {
       if (!el.classList.contains('popped')) {
         el.classList.add('popped');
         setTimeout(() => {
-          el.classList.remove('popped'); // Infinite regen
-        }, 1200);
+          el.classList.remove('popped');
+        }, 1500);
       }
     }
 
@@ -222,9 +413,6 @@
     const evadeBtn = document.getElementById('runawayBtn');
     const container = document.getElementById('evadeContainer');
 
-    evadeBtn.addEventListener('mouseenter', moveButton);
-    evadeBtn.addEventListener('mousemove', moveButton);
-
     function moveButton() {
       const containerRect = container.getBoundingClientRect();
       const btnRect = evadeBtn.getBoundingClientRect();
@@ -237,6 +425,12 @@
       evadeBtn.style.left = `${newX}px`;
       evadeBtn.style.top = `${newY}px`;
     }
+
+    evadeBtn.addEventListener('mouseenter', moveButton);
+    evadeBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      moveButton();
+    });
   </script>
 </body>
 </html>
