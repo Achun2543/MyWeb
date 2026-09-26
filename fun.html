@@ -32,7 +32,7 @@
       transition: background 0.3s, color 0.3s; 
     }
 
-    /* Mobile-friendly Responsive Nav Bar */
+    /* Fixed Nav Layout */
     nav { 
       background: var(--nav-bg); 
       padding: 12px 20px; 
@@ -43,7 +43,7 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
 
     .nav-links {
@@ -75,12 +75,6 @@
       cursor: pointer; 
       font-weight: bold; 
       transition: background 0.2s;
-    }
-
-    @media (max-width: 600px) {
-      nav { flex-direction: column; align-items: stretch; }
-      .nav-links { justify-content: center; }
-      .theme-toggle-btn { width: 100%; text-align: center; }
     }
 
     /* Grid Layout */
@@ -154,7 +148,7 @@
     .spinner-container { width: 100%; height: 90px; display: flex; align-items: center; justify-content: center; touch-action: none; }
     .spinner { font-size: 60px; cursor: grab; user-select: none; display: inline-block; -webkit-tap-highlight-color: transparent; }
 
-    /* Bubble Wrap Grid */
+    /* Expanded Bubble Wrap Grid (15 bubbles) */
     .bubble-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 5px 0; max-width: 240px; }
     .bubble { 
       width: 38px; 
@@ -189,8 +183,8 @@
     .bell-btn { font-size: 50px; background: none; border: none; cursor: pointer; transition: transform 0.1s; user-select: none; -webkit-tap-highlight-color: transparent; }
     .bell-btn:active { transform: scale(0.85) translateY(5px); }
 
-    /* Slime Stretch & Secret Base Entrance */
-    .slime-container { height: 80px; width: 100%; display: flex; align-items: center; justify-content: center; touch-action: none; position: relative; }
+    /* Slime Stretch */
+    .slime-container { height: 80px; width: 100%; display: flex; align-items: center; justify-content: center; touch-action: none; }
     .slime {
       width: 80px;
       height: 50px;
@@ -200,21 +194,6 @@
       cursor: grab;
       transition: width 0.1s ease, height 0.1s ease, border-radius 0.1s ease;
       user-select: none;
-      z-index: 2;
-    }
-
-    .secret-entrance {
-      position: absolute;
-      font-size: 22px;
-      cursor: pointer;
-      display: none;
-      z-index: 1;
-      animation: pulse 1s infinite alternate;
-    }
-
-    @keyframes pulse {
-      from { transform: scale(0.9); opacity: 0.6; }
-      to { transform: scale(1.2); opacity: 1; }
     }
 
     /* Rock Stacker */
@@ -242,8 +221,8 @@
     <!-- 1. Pop It Toy -->
     <div class="card">
       <div>
-        <h3>1. Pop It Toy 🟪</h3>
-        <p>Pop all the bubbles:</p>
+        <h3>1. Pop It Toy 🎉</h3>
+        <p>Pop all the uh stuffs:</p>
       </div>
       <div class="pop-it-grid">
         <button class="pop-btn" style="background:#ff4757;" onclick="popBubble(this)"></button>
@@ -260,7 +239,7 @@
     <div class="card">
       <div>
         <h3>2. Fidget Spinner 🌀</h3>
-        <p>Flick or drag fast to spin!</p>
+        <p>Flick or drag fast to spin (Buggy :c)</p>
       </div>
       <div class="spinner-container" id="spinnerZone">
         <div class="spinner" id="spinner">⚙️</div>
@@ -282,21 +261,20 @@
     <div class="card">
       <div>
         <h3>4. Desk Service Bell 🛎️</h3>
-        <p>Ring for customer service:</p>
+        <p>Ring for customer service (forever)</p>
       </div>
       <button class="bell-btn" onclick="ringBell()">🛎️</button>
       <div id="bellCount" class="score">Rings: 0</div>
     </div>
 
-    <!-- 5. Stretchable Slime + Secret Base -->
+    <!-- 5. Stretchable Slime -->
     <div class="card">
       <div>
         <h3>5. Stretchable Slime 🧪</h3>
-        <p>Drag wide to reveal secret entrance!</p>
+        <p>Drag to stretch & pull (no thats NOT me)</p>
       </div>
       <div class="slime-container" id="slimeZone">
         <div class="slime" id="slime"></div>
-        <div class="secret-entrance" id="secretEntrance" onclick="enterSecretBase()">🌀🔒</div>
       </div>
       <div></div>
     </div>
@@ -340,9 +318,9 @@
     <div class="card">
       <div>
         <h3>9. Aura Clicker ✨</h3>
-        <p>Click to gain Aura points:</p>
+        <p>Click to gain Aura 🗿:</p>
       </div>
-      <button class="action-btn" onclick="addAura()">Collect Aura ✨</button>
+      <button class="action-btn" onclick="addAura()">💥Aura🗿</button>
       <div id="auraCount" class="score">Aura: 0</div>
     </div>
 
@@ -350,7 +328,7 @@
     <div class="card">
       <div>
         <h3>10. Color Theme Switcher 🎨</h3>
-        <p>Randomize background tint:</p>
+        <p>Randomize background tint (ugly warning):</p>
       </div>
       <button class="action-btn" onclick="changeBg()" style="background: #9b59b6;">Change Color 🎨</button>
       <div></div>
@@ -360,7 +338,7 @@
     <div class="card" id="evadeContainer" style="min-height: 240px;">
       <div>
         <h3>11. You Can't Click Me 🏃</h3>
-        <p>Try hovering or touching it:</p>
+        <p>Try it >:)</p>
       </div>
       <button class="action-btn" id="runawayBtn" style="left: 35%; top: 55%;">Catch Me!</button>
       <div></div>
@@ -387,6 +365,7 @@
     });
 
     function toggleTheme() {
+      document.documentElement.style.removeProperty('--bg-color');
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
@@ -395,30 +374,42 @@
       if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
     }
 
-    // Pop It
-    function popBubble(btn) { btn.classList.toggle('popped'); }
-    function resetPopIt() { document.querySelectorAll('.pop-btn').forEach(btn => btn.classList.remove('popped')); }
+    // 1. Pop It Mechanics
+    function popBubble(btn) {
+      btn.classList.toggle('popped');
+    }
+    function resetPopIt() {
+      document.querySelectorAll('.pop-btn').forEach(btn => btn.classList.remove('popped'));
+    }
 
-    // Spinner
+    // 2. Velocity Fidget Spinner
     const spinner = document.getElementById('spinner');
     const spinnerZone = document.getElementById('spinnerZone');
-    let angle = 0, velocity = 0, lastPos = { x: 0, y: 0 }, lastTime = Date.now();
+    let angle = 0;
+    let velocity = 0;
+    let lastPos = { x: 0, y: 0 };
+    let lastTime = Date.now();
 
     function updateSpinner() {
       if (Math.abs(velocity) > 0.1) {
         angle += velocity;
-        velocity *= 0.96;
+        velocity *= 0.96; // Friction
         spinner.style.transform = `rotate(${angle}deg)`;
-      } else { velocity = 0; }
+      } else {
+        velocity = 0;
+      }
       requestAnimationFrame(updateSpinner);
     }
     updateSpinner();
 
     function handlePointerMove(clientX, clientY) {
-      const now = Date.now(), dt = now - lastTime;
+      const now = Date.now();
+      const dt = now - lastTime;
       if (dt > 0) {
-        const dx = clientX - lastPos.x, dy = clientY - lastPos.y;
-        const speed = Math.sqrt(dx * dx + dy * dy) / dt;
+        const dx = clientX - lastPos.x;
+        const dy = clientY - lastPos.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const speed = dist / dt;
         if (speed > 0.2) velocity += speed * 2;
       }
       lastPos = { x: clientX, y: clientY };
@@ -430,7 +421,7 @@
       if (e.touches.length > 0) handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
-    // Bubble Wrap
+    // 3. Bubble Wrap Mechanics
     function popWrap(el) {
       if (!el.classList.contains('popped')) {
         el.classList.add('popped');
@@ -438,17 +429,16 @@
       }
     }
 
-    // Desk Bell
+    // 4. Desk Bell
     let bellRings = 0;
     function ringBell() {
       bellRings++;
       document.getElementById('bellCount').textContent = `Rings: ${bellRings}`;
     }
 
-    // Slime Stretch & Secret Entrance reveal
+    // 5. Slime Stretch
     const slime = document.getElementById('slime');
     const slimeZone = document.getElementById('slimeZone');
-    const secretEntrance = document.getElementById('secretEntrance');
     let isStretching = false;
 
     function stretchSlime(e) {
@@ -459,15 +449,6 @@
       const newWidth = Math.min(220, Math.max(80, 80 + dist * 1.5));
       slime.style.width = `${newWidth}px`;
       slime.style.height = `${Math.max(25, 50 - dist * 0.2)}px`;
-
-      // Show secret base entrance if stretched wide enough
-      if (newWidth >= 180) {
-        secretEntrance.style.display = 'block';
-      }
-    }
-
-    function enterSecretBase() {
-      alert("🚨 ACCESS GRANTED! Welcome to Slime's Secret Base! 🛸 Secret Unlocked!");
     }
 
     slimeZone.addEventListener('mousedown', () => isStretching = true);
@@ -485,30 +466,35 @@
     slimeZone.addEventListener('mousemove', stretchSlime);
     slimeZone.addEventListener('touchmove', stretchSlime);
 
-    // Rock Stacker
+    // 6. Pebble Stacker
     function addRock() {
       const stack = document.getElementById('rockStack');
       const count = stack.children.length;
-      if (count >= 4) { stack.innerHTML = ''; return; }
+      if (count >= 4) {
+        stack.innerHTML = ''; // Collapse after 4 rocks
+        return;
+      }
       const rock = document.createElement('div');
       rock.className = 'rock';
       rock.style.width = `${100 - count * 18}px`;
       stack.appendChild(rock);
     }
 
-    // Stubborn Switch
+    // 8. Stubborn Switch
     function autoTurnOff(el) {
-      if (el.checked) { setTimeout(() => { el.checked = false; }, 250); }
+      if (el.checked) {
+        setTimeout(() => { el.checked = false; }, 250);
+      }
     }
 
-    // Aura Clicker
+    // 9. Aura Clicker
     let aura = 0;
     function addAura() {
       aura += 100;
       document.getElementById('auraCount').textContent = `Aura: +${aura.toLocaleString()}`;
     }
 
-    // Color Switcher
+    // 10. Random Color Tint
     function changeBg() {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       const hue = Math.floor(Math.random() * 360);
@@ -517,7 +503,7 @@
       document.documentElement.style.setProperty('--bg-color', `hsl(${hue}, ${saturation}%, ${lightness}%)`);
     }
 
-    // Evading Button
+    // 11. Evading Button
     const evadeBtn = document.getElementById('runawayBtn');
     const container = document.getElementById('evadeContainer');
 
