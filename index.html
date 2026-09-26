@@ -14,11 +14,11 @@
       --border-color: #ccc;
     }
     [data-theme="dark"] {
-      --bg-color: #1a1a1a;
-      --card-bg: #2d2d2d;
+      --bg-color: #0f1117;
+      --card-bg: #1c1f2b;
       --text-color: #f4f6f8;
-      --nav-bg: #2d2d2d;
-      --border-color: #444;
+      --nav-bg: #1c1f2b;
+      --border-color: #2e3440;
     }
 
     * { box-sizing: border-box; }
@@ -78,21 +78,13 @@
     }
 
     @media (max-width: 600px) {
-      nav {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .nav-links {
-        justify-content: center;
-      }
-      .theme-toggle-btn {
-        width: 100%;
-        text-align: center;
-      }
+      nav { flex-direction: column; align-items: stretch; }
+      .nav-links { justify-content: center; }
+      .theme-toggle-btn { width: 100%; text-align: center; }
     }
 
     .container {
-      max-width: 800px;
+      max-width: 850px;
       margin: 0 auto;
     }
 
@@ -123,6 +115,117 @@
 
     .menu-card h2 { margin: 0 0 10px 0; font-size: 20px; color: #0070f3; }
     .menu-card p { margin: 0; opacity: 0.8; font-size: 14px; line-height: 1.5; }
+
+    /* TUFF Slime Secret Base Banner Styling */
+    .tuff-secret-banner {
+      margin-top: 35px;
+      position: relative;
+      background: linear-gradient(135deg, #0d0f18 0%, #1a0933 50%, #051923 100%);
+      border: 2px solid #8e44ad;
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(142, 68, 173, 0.35), inset 0 0 15px rgba(0, 242, 254, 0.15);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .tuff-secret-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(165, 94, 234, 0.15) 0%, transparent 60%);
+      animation: rotateGlow 8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes rotateGlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .tuff-secret-banner:hover {
+      transform: translateY(-5px) scale(1.01);
+      border-color: #00f2fe;
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.6), inset 0 0 20px rgba(142, 68, 173, 0.4);
+    }
+
+    .tuff-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tuff-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid #00f2fe;
+      color: #00f2fe;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #00f2fe;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00f2fe;
+      animation: blink 1.2s infinite alternate;
+    }
+
+    @keyframes blink {
+      from { opacity: 0.3; }
+      to { opacity: 1; }
+    }
+
+    .tuff-title {
+      font-family: 'Courier New', Courier, monospace, sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+      text-shadow: 0 0 10px rgba(165, 94, 234, 0.8), 0 0 20px rgba(0, 242, 254, 0.5);
+      position: relative;
+      z-index: 2;
+    }
+
+    .tuff-sub {
+      color: #a55eea;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tuff-arrow {
+      font-size: 22px;
+      color: #00f2fe;
+      transition: transform 0.2s;
+    }
+
+    .tuff-secret-banner:hover .tuff-arrow {
+      transform: translateX(8px);
+    }
   </style>
 </head>
 <body>
@@ -162,6 +265,22 @@
         </div>
       </a>
     </div>
+
+    <!-- TUFF Slime's Secret base // Entrence Module -->
+    <div class="tuff-secret-banner" onclick="enterSecretBase()">
+      <div class="tuff-header">
+        <div class="tuff-status">
+          <span class="status-dot"></span>
+          RESTRICTED AREA // LIVE ACCESS
+        </div>
+        <span class="tuff-arrow">➔</span>
+      </div>
+      
+      <h2 class="tuff-title">🧪 Slime's Secret base // Entrence</h2>
+      <div class="tuff-sub">
+        <span>⚡ [LEVEL 5 CLEARANCE REQUIRED] Click to bypass security locks</span>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -180,6 +299,11 @@
       localStorage.setItem('theme', next);
       const btn = document.getElementById('themeToggleBtn');
       if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+    }
+
+    function enterSecretBase() {
+      alert("🚨 ACCESS GRANTED! Opening Slime's Secret Base Portal... 🛸");
+      window.location.href = "/fun.html";
     }
   </script>
 </body>
