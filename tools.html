@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Build A Logic Wall Converter</title>
+  <title>Build Logic Image to String Converter [ALL CODE CREDIT TO Dimitri]</title>
   <style>
     body { font-family: sans-serif; margin: 0; padding: 20px; background: #2c3e50; color: #ecf0f1; }
     nav { background: #34495e; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
@@ -13,7 +13,20 @@
     input, select, button, textarea { width: 100%; margin-top: 10px; padding: 10px; border-radius: 5px; border: none; box-sizing: border-box; }
     button { background: #3498db; color: white; font-weight: bold; cursor: pointer; }
     button:hover { background: #2980b9; }
-    textarea { height: 150px; background: #1e272e; color: #00ff88; font-family: monospace; }
+    textarea { height: 180px; background: #1e272e; color: #00ff88; font-family: monospace; margin-top: 10px; }
+    
+    /* 狀態顯示框樣式 */
+    .status-box {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      display: none; /* 預設隱藏 */
+    }
+    .status-success { background: #27ae60; color: white; }
+    .status-error { background: #e74c3c; color: white; }
+    .status-info { background: #f39c12; color: white; }
   </style>
 </head>
 <body>
@@ -46,6 +59,9 @@
       </select>
 
       <button id="convertBtn" onclick="processImage()">🚀 開始轉換代碼</button>
+      
+      <!-- 網頁內嵌狀態訊息框 -->
+      <div id="statusBox" class="status-box"></div>
     </div>
 
     <div class="card">
@@ -59,6 +75,13 @@
 
   <script>
     const BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#$";
+
+    function showStatus(text, type) {
+      const statusBox = document.getElementById('statusBox');
+      statusBox.textContent = text;
+      statusBox.className = 'status-box status-' + type;
+      statusBox.style.display = 'block';
+    }
 
     function encodePosition(x, y, z) {
       x = Math.max(0, Math.min(255, parseInt(x)));
@@ -75,15 +98,16 @@
     function processImage() {
       const fileInput = document.getElementById('imageInput');
       if (!fileInput.files[0]) {
-        alert('請先選擇圖片！');
+        showStatus('⚠️ 請先選擇圖片！', 'error');
         return;
       }
+
+      showStatus('⏳ 處理中，請稍候...', 'info');
 
       const img = new Image();
       img.src = URL.createObjectURL(fileInput.files[0]);
       img.onload = () => {
         const size = parseInt(document.getElementById('wallSize').value);
-        const mode = document.getElementById('mode').value;
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
 
@@ -108,16 +132,23 @@
         }
 
         document.getElementById('resultText').value = blocks.join(';');
-        alert('轉換完成！');
+        showStatus(`✅ 轉換成功！共產生 ${blocks.length.toLocaleString()} 個方塊代碼。`, 'success');
+      };
+
+      img.onerror = () => {
+        showStatus('❌ 圖片載入失敗，請換一張圖片再試。', 'error');
       };
     }
 
     function copyCode() {
       const textarea = document.getElementById('resultText');
-      if (!textarea.value) return;
+      if (!textarea.value) {
+        showStatus('⚠️ 沒有可複製的代碼，請先轉換圖片！', 'error');
+        return;
+      }
       textarea.select();
       document.execCommand('copy');
-      alert('已複製到剪貼簿！');
+      showStatus('📋 代碼已成功複製到剪貼簿！', 'success');
     }
   </script>
 </body>
