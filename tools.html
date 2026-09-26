@@ -98,11 +98,11 @@
     function processImage() {
       const fileInput = document.getElementById('imageInput');
       if (!fileInput.files[0]) {
-        showStatus('⚠️ 請先選擇圖片！', 'error');
+        showStatus('⚠️ You did NOT input an image', 'error');
         return;
       }
 
-      showStatus('⏳ 處理中，請稍候...', 'info');
+      showStatus('⏳ Loading...', 'info');
 
       const img = new Image();
       img.src = URL.createObjectURL(fileInput.files[0]);
