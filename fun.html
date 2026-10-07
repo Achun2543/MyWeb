@@ -15,7 +15,7 @@
       --shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
     
-    [data-theme="dark"] {
+    html[data-theme="dark"] {
       --bg-color: #0f1117;
       --card-bg: #1c1f2b;
       --text-color: #f4f6f8;
@@ -84,12 +84,6 @@
       font-weight: bold; 
       transition: all 0.2s ease;
     }
-    .theme-toggle-btn:hover {
-      background: rgba(0,0,0,0.05);
-    }
-    [data-theme="dark"] .theme-toggle-btn:hover {
-      background: rgba(255,255,255,0.08);
-    }
 
     .header-section {
       margin-bottom: 25px;
@@ -143,30 +137,30 @@
 
     /* Canvases */
     canvas.toy-canvas {
-      width: 100% !important;
-      height: 150px !important;
+      width: 100%;
+      height: 140px;
       border-radius: 10px;
       background: rgba(0,0,0,0.03);
       touch-action: none;
       cursor: pointer;
       display: block;
     }
-    [data-theme="dark"] canvas.toy-canvas {
+    html[data-theme="dark"] canvas.toy-canvas {
       background: rgba(255,255,255,0.04);
     }
 
     /* Squeeze Ball */
     .squeeze-zone {
       width: 100%;
-      height: 150px;
+      height: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
       touch-action: none;
     }
     .squeeze-ball {
-      width: 85px;
-      height: 85px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253);
       box-shadow: 0 8px 18px rgba(238, 82, 83, 0.4);
@@ -197,7 +191,7 @@
     /* Fidget Spinner */
     .spinner-container { 
       width: 100%; 
-      height: 150px; 
+      height: 140px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
@@ -215,8 +209,8 @@
     /* Bubble Wrap */
     .bubble-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 5px 0; }
     .bubble { 
-      width: 34px; 
-      height: 34px; 
+      width: 32px; 
+      height: 32px; 
       background: rgba(0, 112, 243, 0.15); 
       border: 2px solid #0070f3; 
       border-radius: 50%; 
@@ -226,12 +220,12 @@
     .bubble.popped { background: transparent; border-color: #aaa; transform: scale(0.82); opacity: 0.4; }
 
     /* Desk Bell */
-    .bell-btn { font-size: 45px; background: none; border: none; cursor: pointer; transition: transform 0.1s; margin-top: 10px;}
+    .bell-btn { font-size: 45px; background: none; border: none; cursor: pointer; transition: transform 0.1s; margin-top: 5px;}
     .bell-btn:active { transform: scale(0.85) translateY(4px); }
     .score { font-size: 16px; font-weight: bold; color: #2ecc71; margin-bottom: 10px; }
 
     /* Stubborn Switch */
-    .switch-zone { display: flex; align-items: center; justify-content: center; height: 120px; }
+    .switch-zone { display: flex; align-items: center; justify-content: center; height: 100px; }
     .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -377,164 +371,360 @@
   </div>
 
   <script>
-    // System & Theme Management
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      const btn = document.getElementById('themeToggleBtn');
-      if (btn) btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
-    }
-
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
-
+    /* Global Theme Control */
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
-      applyTheme(next);
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    // Initialize Theme immediately
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+
+    window.addEventListener('load', () => {
+      // Sync Theme Button Text
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = currentTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+
       // Bubble Wrap Init
       const bwContainer = document.getElementById('bubbleWrapContainer');
-      for (let i = 0; i < 15; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        bubble.onclick = function() {
-          if (!this.classList.contains('popped')) {
-            this.classList.add('popped');
-            setTimeout(() => { this.classList.remove('popped'); }, 2000);
-          }
-        };
-        bwContainer.appendChild(bubble);
+      if (bwContainer) {
+        for (let i = 0; i < 15; i++) {
+          const bubble = document.createElement('div');
+          bubble.className = 'bubble';
+          bubble.onclick = function() {
+            if (!this.classList.contains('popped')) {
+              this.classList.add('popped');
+              setTimeout(() => { this.classList.remove('popped'); }, 2000);
+            }
+          };
+          bwContainer.appendChild(bubble);
+        }
       }
 
-      // Initialize Canvas Toys after layout frame
-      requestAnimationFrame(() => {
-        initSlimePhysics();
-        initSqueezeBall();
-        initSandCanvas();
-        initWaterCanvas();
-        initFidgetSpinner();
-      });
+      // Safe Canvas setup helper
+      function fitCanvas(c) {
+        c.width = c.clientWidth;
+        c.height = c.clientHeight;
+      }
+
+      /* 1. SLIME PHYSICS */
+      const slimeCanvas = document.getElementById('slimeCanvas');
+      if (slimeCanvas) {
+        fitCanvas(slimeCanvas);
+        const ctx = slimeCanvas.getContext('2d');
+        const numPoints = 16;
+        const centerX = slimeCanvas.width / 2 || 140;
+        const centerY = slimeCanvas.height / 2 || 70;
+        const radius = 35;
+        const points = [];
+
+        for (let i = 0; i < numPoints; i++) {
+          const angle = (i / numPoints) * Math.PI * 2;
+          points.push({
+            x: centerX + Math.cos(angle) * radius,
+            y: centerY + Math.sin(angle) * radius,
+            targetX: centerX + Math.cos(angle) * radius,
+            targetY: centerY + Math.sin(angle) * radius,
+            vx: 0, vy: 0
+          });
+        }
+
+        let dragPoint = null;
+
+        function getPos(e) {
+          const r = slimeCanvas.getBoundingClientRect();
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+          return { x: clientX - r.left, y: clientY - r.top };
+        }
+
+        slimeCanvas.addEventListener('mousedown', (e) => {
+          const p = getPos(e);
+          let minDist = Infinity;
+          points.forEach(pt => {
+            const d = Math.hypot(pt.x - p.x, pt.y - p.y);
+            if (d < minDist) { minDist = d; dragPoint = pt; }
+          });
+          if (minDist > radius * 2) dragPoint = null;
+        });
+
+        slimeCanvas.addEventListener('mousemove', (e) => {
+          if (dragPoint) {
+            const p = getPos(e);
+            dragPoint.x = p.x;
+            dragPoint.y = p.y;
+          }
+        });
+
+        window.addEventListener('mouseup', () => { dragPoint = null; });
+
+        slimeCanvas.addEventListener('touchstart', (e) => {
+          const p = getPos(e);
+          let minDist = Infinity;
+          points.forEach(pt => {
+            const d = Math.hypot(pt.x - p.x, pt.y - p.y);
+            if (d < minDist) { minDist = d; dragPoint = pt; }
+          });
+          if (minDist > radius * 2) dragPoint = null;
+        });
+
+        slimeCanvas.addEventListener('touchmove', (e) => {
+          if (dragPoint) {
+            const p = getPos(e);
+            dragPoint.x = p.x;
+            dragPoint.y = p.y;
+          }
+        });
+
+        window.addEventListener('touchend', () => { dragPoint = null; });
+
+        function renderSlime() {
+          ctx.clearRect(0, 0, slimeCanvas.width, slimeCanvas.height);
+
+          points.forEach(p => {
+            if (p !== dragPoint) {
+              const dx = p.targetX - p.x;
+              const dy = p.targetY - p.y;
+              p.vx += dx * 0.08;
+              p.vy += dy * 0.08;
+              p.vx *= 0.75;
+              p.vy *= 0.75;
+              p.x += p.vx;
+              p.y += p.vy;
+            }
+          });
+
+          ctx.beginPath();
+          ctx.fillStyle = window.slimeColor || '#a55eea';
+          ctx.moveTo((points[0].x + points[numPoints - 1].x) / 2, (points[0].y + points[numPoints - 1].y) / 2);
+          for (let i = 0; i < numPoints; i++) {
+            const next = points[(i + 1) % numPoints];
+            const xc = (points[i].x + next.x) / 2;
+            const yc = (points[i].y + next.y) / 2;
+            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+          }
+          ctx.fill();
+
+          let avgX = points.reduce((s, p) => s + p.x, 0) / numPoints;
+          let avgY = points.reduce((s, p) => s + p.y, 0) / numPoints;
+
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(avgX - 10, avgY - 4, 6, 0, Math.PI * 2);
+          ctx.arc(avgX + 10, avgY - 4, 6, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#000000';
+          ctx.beginPath();
+          ctx.arc(avgX - 10, avgY - 4, 2.5, 0, Math.PI * 2);
+          ctx.arc(avgX + 10, avgY - 4, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          requestAnimationFrame(renderSlime);
+        }
+        renderSlime();
+      }
+
+      /* 2. SQUEEZE BALL */
+      const ball = document.getElementById('squeezeBall');
+      if (ball) {
+        const squish = () => { ball.style.transform = 'scale(0.7, 1.25)'; };
+        const release = () => { ball.style.transform = 'scale(1, 1)'; };
+        ball.addEventListener('mousedown', squish);
+        window.addEventListener('mouseup', release);
+        ball.addEventListener('touchstart', (e) => { e.preventDefault(); squish(); });
+        window.addEventListener('touchend', release);
+      }
+
+      /* 3. KINETIC SAND */
+      const sandCanvas = document.getElementById('sandCanvas');
+      if (sandCanvas) {
+        fitCanvas(sandCanvas);
+        const ctx = sandCanvas.getContext('2d');
+        let isSlicing = false;
+        let lastPos = { x: 0, y: 0 };
+        window.sandSlices = [];
+
+        function getPos(e) {
+          const r = sandCanvas.getBoundingClientRect();
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+          return { x: clientX - r.left, y: clientY - r.top };
+        }
+
+        window.drawSand = function() {
+          ctx.clearRect(0, 0, sandCanvas.width, sandCanvas.height);
+          const bx = sandCanvas.width * 0.15, by = 20, bw = sandCanvas.width * 0.7, bh = 90;
+          ctx.fillStyle = '#f39c12';
+          ctx.fillRect(bx, by, bw, bh);
+
+          ctx.fillStyle = '#d35400';
+          for (let i = 0; i < 50; i++) {
+            ctx.fillRect(bx + (i * 13) % bw, by + (i * 17) % bh, 2, 2);
+          }
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 4;
+          ctx.lineCap = 'round';
+          (window.sandSlices || []).forEach(s => {
+            ctx.beginPath();
+            ctx.moveTo(s.x1, s.y1);
+            ctx.lineTo(s.x2, s.y2);
+            ctx.stroke();
+          });
+        };
+
+        sandCanvas.addEventListener('mousedown', (e) => { isSlicing = true; lastPos = getPos(e); });
+        sandCanvas.addEventListener('mousemove', (e) => {
+          if (!isSlicing) return;
+          const pos = getPos(e);
+          window.sandSlices.push({ x1: lastPos.x, y1: lastPos.y, x2: pos.x, y2: pos.y });
+          lastPos = pos;
+          window.drawSand();
+        });
+        window.addEventListener('mouseup', () => { isSlicing = false; });
+
+        sandCanvas.addEventListener('touchstart', (e) => { isSlicing = true; lastPos = getPos(e); });
+        sandCanvas.addEventListener('touchmove', (e) => {
+          if (!isSlicing) return;
+          const pos = getPos(e);
+          window.sandSlices.push({ x1: lastPos.x, y1: lastPos.y, x2: pos.x, y2: pos.y });
+          lastPos = pos;
+          window.drawSand();
+        });
+        window.addEventListener('touchend', () => { isSlicing = false; });
+
+        window.drawSand();
+      }
+
+      /* 4. WATER RIPPLE */
+      const waterCanvas = document.getElementById('waterCanvas');
+      if (waterCanvas) {
+        fitCanvas(waterCanvas);
+        const ctx = waterCanvas.getContext('2d');
+        const ripples = [];
+
+        function createRipple(e) {
+          const r = waterCanvas.getBoundingClientRect();
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+          ripples.push({ x: clientX - r.left, y: clientY - r.top, radius: 2, alpha: 1 });
+        }
+
+        waterCanvas.addEventListener('mousedown', createRipple);
+        waterCanvas.addEventListener('touchmove', createRipple);
+
+        function renderWater() {
+          ctx.clearRect(0, 0, waterCanvas.width, waterCanvas.height);
+          for (let i = ripples.length - 1; i >= 0; i--) {
+            const rp = ripples[i];
+            ctx.beginPath();
+            ctx.arc(rp.x, rp.y, rp.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0, 242, 254, ${rp.alpha})`;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            rp.radius += 2.2;
+            rp.alpha -= 0.025;
+            if (rp.alpha <= 0) ripples.splice(i, 1);
+          }
+          requestAnimationFrame(renderWater);
+        }
+        renderWater();
+      }
+
+      /* 6. FIDGET SPINNER */
+      const spinner = document.getElementById('spinner');
+      const spinnerZone = document.getElementById('spinnerZone');
+      if (spinner && spinnerZone) {
+        let rotationAngle = 0;
+        let spinnerVelocity = 0;
+        let isDragging = false;
+        let lastX = 0;
+
+        function spinLoop() {
+          if (Math.abs(spinnerVelocity) > 0.05) {
+            rotationAngle += spinnerVelocity;
+            spinnerVelocity *= 0.965;
+            spinner.style.transform = `rotate(${rotationAngle}deg)`;
+          }
+          requestAnimationFrame(spinLoop);
+        }
+        spinLoop();
+
+        function handleStart(clientX) { isDragging = true; lastX = clientX; }
+        function handleMove(clientX) {
+          if (!isDragging) return;
+          const dx = clientX - lastX;
+          spinnerVelocity += dx * 0.3;
+          lastX = clientX;
+        }
+
+        spinnerZone.addEventListener('mousedown', (e) => handleStart(e.clientX));
+        window.addEventListener('mousemove', (e) => handleMove(e.clientX));
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        spinnerZone.addEventListener('touchstart', (e) => handleStart(e.touches[0].clientX));
+        window.addEventListener('touchmove', (e) => handleMove(e.touches[0].clientX));
+        window.addEventListener('touchend', () => { isDragging = false; });
+
+        spinnerZone.addEventListener('click', () => { spinnerVelocity += 15; });
+      }
+
+      /* Unclickable Button */
+      const evadeBtn = document.getElementById('runawayBtn');
+      const container = document.getElementById('evadeContainer');
+      if (evadeBtn && container) {
+        function moveButton() {
+          const containerRect = container.getBoundingClientRect();
+          const btnRect = evadeBtn.getBoundingClientRect();
+          const maxX = containerRect.width - btnRect.width - 20;
+          const maxY = containerRect.height - btnRect.height - 20;
+
+          let newX = Math.max(10, Math.floor(Math.random() * maxX));
+          let newY = Math.max(50, Math.floor(Math.random() * maxY));
+
+          evadeBtn.style.left = `${newX}px`;
+          evadeBtn.style.top = `${newY}px`;
+        }
+
+        evadeBtn.addEventListener('mouseenter', moveButton);
+        evadeBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+      }
     });
 
-    /* Helper for Canvas Auto Size */
-    function resizeCanvas(canvas) {
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return false;
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      const ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
-      return { width: rect.width, height: rect.height };
-    }
-
-    /* 1. SLIME PHYSICS */
-    let slimeColor = '#a55eea';
+    /* Global Helper Functions */
+    window.slimeColor = '#a55eea';
     const slimeColors = ['#a55eea', '#2ecc71', '#ff4757', '#00f2fe', '#ffa502'];
     function changeSlimeColor() {
-      slimeColor = slimeColors[(slimeColors.indexOf(slimeColor) + 1) % slimeColors.length];
+      window.slimeColor = slimeColors[(slimeColors.indexOf(window.slimeColor) + 1) % slimeColors.length];
     }
 
-    function initSlimePhysics() {
-      const canvas = document.getElementById('slimeCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const dim = resizeCanvas(canvas) || { width: 280, height: 150 };
+    function resetSand() {
+      window.sandSlices = [];
+      if (window.drawSand) window.drawSand();
+    }
 
-      const numPoints = 16;
-      let centerX = dim.width / 2;
-      let centerY = dim.height / 2;
-      const radius = 38;
-      const points = [];
+    function popBubble(btn) { btn.classList.toggle('popped'); }
+    function resetPopIt() { document.querySelectorAll('.pop-btn').forEach(btn => btn.classList.remove('popped')); }
 
-      for (let i = 0; i < numPoints; i++) {
-        const angle = (i / numPoints) * Math.PI * 2;
-        points.push({
-          x: centerX + Math.cos(angle) * radius,
-          y: centerY + Math.sin(angle) * radius,
-          targetX: centerX + Math.cos(angle) * radius,
-          targetY: centerY + Math.sin(angle) * radius,
-          vx: 0, vy: 0
-        });
-      }
+    let bellRings = 0;
+    function ringBell() {
+      bellRings++;
+      document.getElementById('bellCount').textContent = `Rings: ${bellRings}`;
+    }
 
-      let dragPoint = null;
-      let mousePos = { x: centerX, y: centerY };
-
-      function getPos(e) {
-        const r = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { x: clientX - r.left, y: clientY - r.top };
-      }
-
-      function startDrag(e) {
-        mousePos = getPos(e);
-        let minDist = Infinity;
-        points.forEach(p => {
-          const d = Math.hypot(p.x - mousePos.x, p.y - mousePos.y);
-          if (d < minDist) { minDist = d; dragPoint = p; }
-        });
-        if (minDist > radius * 2) dragPoint = null;
-      }
-
-      function moveDrag(e) {
-        if (!dragPoint) return;
-        mousePos = getPos(e);
-        dragPoint.x = mousePos.x;
-        dragPoint.y = mousePos.y;
-      }
-
-      function endDrag() { dragPoint = null; }
-
-      canvas.addEventListener('mousedown', startDrag);
-      canvas.addEventListener('mousemove', moveDrag);
-      window.addEventListener('mouseup', endDrag);
-
-      canvas.addEventListener('touchstart', startDrag);
-      canvas.addEventListener('touchmove', moveDrag);
-      window.addEventListener('touchend', endDrag);
-
-      function render() {
-        const r = canvas.getBoundingClientRect();
-        ctx.clearRect(0, 0, r.width, r.height);
-
-        points.forEach(p => {
-          if (p !== dragPoint) {
-            const dx = p.targetX - p.x;
-            const dy = p.targetY - p.y;
-            p.vx += dx * 0.08;
-            p.vy += dy * 0.08;
-            p.vx *= 0.75;
-            p.vy *= 0.75;
-            p.x += p.vx;
-            p.y += p.vy;
-          }
-        });
-
-        ctx.beginPath();
-        ctx.fillStyle = slimeColor;
-        ctx.shadowColor = slimeColor;
-        ctx.shadowBlur = 10;
-
-        ctx.moveTo((points[0].x + points[numPoints - 1].x) / 2, (points[0].y + points[numPoints - 1].y) / 2);
-        for (let i = 0; i < numPoints; i++) {
-          const next = points[(i + 1) % numPoints];
-          const xc = (points[i].x + next.x) / 2;
-          const yc = (points[i].y + next.y) / 2;
-          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-        }
-        ctx.fill();
-        ctx.shadowBlur = 0;
-
-        let avgX = points.reduce((s, p) => s + p.x, 0) / numPoints;
-        let avgY = points.reduce((s, p) => s + p.y, 0) / numPoints;
-
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(avgX - 10, avgY - 4, 6, 0, Math.PI * 2);
-        ctx.arc(avgX + 10, avgY - 4, 6, 0, Math.PI * 2);
-        ctx.fill();
+    function autoTurnOff(el) {
+      if (el.checked) { setTimeout(() => { el.checked = false; }, 250); }
+    }
+  </script>
+</body>
+</html>
