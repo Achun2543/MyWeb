@@ -11,45 +11,53 @@
       --card-bg: #ffffff;
       --text-color: #333333;
       --nav-bg: #ffffff;
-      --border-color: #ccc;
+      --border-color: #e2e8f0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
+    
     [data-theme="dark"] {
       --bg-color: #0f1117;
       --card-bg: #1c1f2b;
       --text-color: #f4f6f8;
       --nav-bg: #1c1f2b;
       --border-color: #2e3440;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     
-    * { box-sizing: border-box; }
-
-    body { 
-      font-family: system-ui, -apple-system, sans-serif; 
-      margin: 0; 
-      padding: 20px; 
-      background: var(--bg-color); 
-      color: var(--text-color); 
-      transition: background 0.3s, color 0.3s; 
+    * { 
+      box-sizing: border-box; 
+      margin: 0;
+      padding: 0;
     }
 
-    /* Mobile-friendly Responsive Nav Bar */
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      padding: 20px; 
+      background-color: var(--bg-color); 
+      color: var(--text-color); 
+      transition: background-color 0.3s ease, color 0.3s ease; 
+      min-height: 100vh;
+    }
+
+    /* Responsive Nav Bar */
     nav { 
       background: var(--nav-bg); 
       padding: 12px 20px; 
       border-radius: 12px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      box-shadow: var(--shadow); 
       margin-bottom: 25px; 
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 12px;
+      border: 1px solid var(--border-color);
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 18px;
       flex-wrap: wrap;
     }
 
@@ -57,13 +65,13 @@
       text-decoration: none; 
       color: var(--text-color); 
       font-weight: 600; 
-      font-size: 16px; 
+      font-size: 15px; 
     }
 
     nav a.active { 
       color: #0070f3; 
       border-bottom: 2px solid #0070f3; 
-      padding-bottom: 3px; 
+      padding-bottom: 2px; 
     }
 
     .theme-toggle-btn { 
@@ -74,47 +82,56 @@
       border-radius: 20px; 
       cursor: pointer; 
       font-weight: bold; 
-      transition: background 0.2s;
+      transition: all 0.2s ease;
+    }
+    .theme-toggle-btn:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    [data-theme="dark"] .theme-toggle-btn:hover {
+      background: rgba(255,255,255,0.08);
     }
 
-    @media (max-width: 600px) {
-      nav { flex-direction: column; align-items: stretch; }
-      .nav-links { justify-content: center; }
-      .theme-toggle-btn { width: 100%; text-align: center; }
+    .header-section {
+      margin-bottom: 25px;
     }
+    .header-section h1 { font-size: 28px; margin-bottom: 6px; }
+    .header-section p { opacity: 0.7; font-size: 14px; }
 
-    /* Grid Layout */
+    /* Fixed Grid Layout */
     .grid { 
       display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); 
-      gap: 25px; 
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+      gap: 20px; 
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     .card { 
       background: var(--card-bg); 
       padding: 20px; 
       border-radius: 16px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      box-shadow: var(--shadow); 
+      border: 1px solid var(--border-color);
       text-align: center; 
       position: relative; 
-      overflow: hidden; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: space-between; 
-      min-height: 260px;
+      height: 280px;
+      overflow: hidden;
     }
 
-    .card h3 { margin: 0 0 6px 0; font-size: 18px; }
-    .card p { margin: 0 0 12px 0; opacity: 0.8; font-size: 13px; }
+    .card h3 { margin: 0 0 4px 0; font-size: 17px; }
+    .card p { margin: 0 0 10px 0; opacity: 0.7; font-size: 12px; }
 
-    /* Buttons & Controls */
+    /* Controls */
     button.action-btn { 
       background: #0070f3; 
       color: white; 
       border: none; 
       padding: 8px 16px; 
-      font-size: 14px; 
+      font-size: 13px; 
       font-weight: bold; 
       border-radius: 8px; 
       cursor: pointer; 
@@ -124,44 +141,46 @@
     }
     button.action-btn:active { transform: scale(0.95); }
 
+    /* Canvases */
     canvas.toy-canvas {
-      width: 100%;
-      height: 140px;
-      border-radius: 12px;
+      width: 100% !important;
+      height: 150px !important;
+      border-radius: 10px;
       background: rgba(0,0,0,0.03);
       touch-action: none;
       cursor: pointer;
+      display: block;
     }
     [data-theme="dark"] canvas.toy-canvas {
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.04);
     }
 
     /* Squeeze Ball */
     .squeeze-zone {
       width: 100%;
-      height: 140px;
+      height: 150px;
       display: flex;
       align-items: center;
       justify-content: center;
       touch-action: none;
     }
     .squeeze-ball {
-      width: 90px;
-      height: 90px;
+      width: 85px;
+      height: 85px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253);
-      box-shadow: 0 10px 20px rgba(238, 82, 83, 0.4);
+      box-shadow: 0 8px 18px rgba(238, 82, 83, 0.4);
       cursor: pointer;
       transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Pop It Grid */
-    .pop-it-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0; }
+    /* Pop It */
+    .pop-it-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0; }
     .pop-btn { 
-      width: 45px; 
-      height: 45px; 
+      width: 42px; 
+      height: 42px; 
       border-radius: 50%; 
       border: none; 
       box-shadow: inset 0 -4px 0 rgba(0,0,0,0.25), 0 4px 8px rgba(0,0,0,0.15); 
@@ -175,10 +194,10 @@
       filter: brightness(0.75); 
     }
 
-    /* Fixed Working Fidget Spinner */
+    /* Fidget Spinner */
     .spinner-container { 
       width: 100%; 
-      height: 140px; 
+      height: 150px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
@@ -187,7 +206,7 @@
     }
     .spinner-container:active { cursor: grabbing; }
     .spinner { 
-      font-size: 70px; 
+      font-size: 65px; 
       user-select: none; 
       display: inline-block; 
       transform-origin: center center;
@@ -196,8 +215,8 @@
     /* Bubble Wrap */
     .bubble-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 5px 0; }
     .bubble { 
-      width: 35px; 
-      height: 35px; 
+      width: 34px; 
+      height: 34px; 
       background: rgba(0, 112, 243, 0.15); 
       border: 2px solid #0070f3; 
       border-radius: 50%; 
@@ -207,11 +226,12 @@
     .bubble.popped { background: transparent; border-color: #aaa; transform: scale(0.82); opacity: 0.4; }
 
     /* Desk Bell */
-    .bell-btn { font-size: 45px; background: none; border: none; cursor: pointer; transition: transform 0.1s; }
+    .bell-btn { font-size: 45px; background: none; border: none; cursor: pointer; transition: transform 0.1s; margin-top: 10px;}
     .bell-btn:active { transform: scale(0.85) translateY(4px); }
-    .score { font-size: 18px; font-weight: bold; color: #2ecc71; }
+    .score { font-size: 16px; font-weight: bold; color: #2ecc71; margin-bottom: 10px; }
 
     /* Stubborn Switch */
+    .switch-zone { display: flex; align-items: center; justify-content: center; height: 120px; }
     .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -233,8 +253,10 @@
     <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark</button>
   </nav>
 
-  <h1 style="margin-bottom: 5px;">🎮 Playground & Interactive Lab</h1>
-  <p style="margin-top: 0; opacity: 0.7; margin-bottom: 25px;">Ultra-satisfying physics toys and fidget gadgets.</p>
+  <div class="header-section">
+    <h1>🎮 Playground & Interactive Lab</h1>
+    <p>Ultra-satisfying physics toys and fidget gadgets.</p>
+  </div>
 
   <div class="grid">
     <!-- 1. Realistic Physics Slime Canvas -->
@@ -244,7 +266,275 @@
         <p>Pull, stretch & squish soft jelly slime!</p>
       </div>
       <canvas id="slimeCanvas" class="toy-canvas"></canvas>
-      <button class="action-btn" onclick="changeSlimeColor()" style="font-size: 11px; padding: 5px 10px; margin-top:5px; background:#a55eea;">Change Color 🎨</button>
+      <button class="action-btn" onclick="changeSlimeColor()" style="font-size: 11px; padding: 5px 12px; background:#a55eea;">Change Color 🎨</button>
     </div>
 
-    <!-- 2.
+    <!-- 2. Squeeze Stress Ball -->
+    <div class="card">
+      <div>
+        <h3>2. Stress Squeeze Ball 🔮</h3>
+        <p>Click, hold or press to squish:</p>
+      </div>
+      <div class="squeeze-zone">
+        <div class="squeeze-ball" id="squeezeBall"></div>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- 3. Kinetic Sand Slicing -->
+    <div class="card">
+      <div>
+        <h3>3. Kinetic Sand Cutter 🥪</h3>
+        <p>Drag across to slice sand blocks:</p>
+      </div>
+      <canvas id="sandCanvas" class="toy-canvas"></canvas>
+      <button class="action-btn" onclick="resetSand()" style="font-size: 11px; padding: 5px 12px; background:#718093;">Reset Sand Block</button>
+    </div>
+
+    <!-- 4. Fluid Water Ripple -->
+    <div class="card">
+      <div>
+        <h3>4. Fluid Water Ripples 🌊</h3>
+        <p>Tap or drag to create water wave ripples:</p>
+      </div>
+      <canvas id="waterCanvas" class="toy-canvas"></canvas>
+      <div></div>
+    </div>
+
+    <!-- 5. Pop It Toy -->
+    <div class="card">
+      <div>
+        <h3>5. Pop It Board 🟪</h3>
+        <p>Pop the rubber bubbles:</p>
+      </div>
+      <div class="pop-it-grid">
+        <button class="pop-btn" style="background:#ff4757;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#ffa502;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#2ed573;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#1e90ff;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#3742fa;" onclick="popBubble(this)"></button>
+        <button class="pop-btn" style="background:#9b59b6;" onclick="popBubble(this)"></button>
+      </div>
+      <button class="action-btn" onclick="resetPopIt()" style="font-size: 11px; padding: 5px 12px; background: #718093;">Reset</button>
+    </div>
+
+    <!-- 6. Working Fidget Spinner -->
+    <div class="card">
+      <div>
+        <h3>6. Fidget Spinner ⚙️</h3>
+        <p>Click, flick or drag fast to spin!</p>
+      </div>
+      <div class="spinner-container" id="spinnerZone">
+        <div class="spinner" id="spinner">⚙️</div>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- 7. Infinite Bubble Wrap -->
+    <div class="card">
+      <div>
+        <h3>7. Bubble Wrap 🫧</h3>
+        <p>Endless bubble popping:</p>
+      </div>
+      <div class="bubble-wrap" id="bubbleWrapContainer"></div>
+      <div></div>
+    </div>
+
+    <!-- 8. Service Bell -->
+    <div class="card">
+      <div>
+        <h3>8. Desk Bell 🛎️</h3>
+        <p>Ring for service:</p>
+      </div>
+      <button class="bell-btn" onclick="ringBell()">🛎️</button>
+      <div id="bellCount" class="score">Rings: 0</div>
+    </div>
+
+    <!-- 9. Stubborn Switch -->
+    <div class="card">
+      <div>
+        <h3>9. Stubborn Switch 🔌</h3>
+        <p>Try switching it ON:</p>
+      </div>
+      <div class="switch-zone">
+        <label class="switch">
+          <input type="checkbox" id="uselessSwitch" onchange="autoTurnOff(this)">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- 10. Unclickable Button -->
+    <div class="card" id="evadeContainer">
+      <div>
+        <h3>10. Unclickable Button 🏃</h3>
+        <p>Try to hover or touch:</p>
+      </div>
+      <button class="action-btn" id="runawayBtn" style="left: 35%; top: 55%;">Catch Me!</button>
+      <div></div>
+    </div>
+  </div>
+
+  <script>
+    // System & Theme Management
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      applyTheme(next);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Bubble Wrap Init
+      const bwContainer = document.getElementById('bubbleWrapContainer');
+      for (let i = 0; i < 15; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.onclick = function() {
+          if (!this.classList.contains('popped')) {
+            this.classList.add('popped');
+            setTimeout(() => { this.classList.remove('popped'); }, 2000);
+          }
+        };
+        bwContainer.appendChild(bubble);
+      }
+
+      // Initialize Canvas Toys after layout frame
+      requestAnimationFrame(() => {
+        initSlimePhysics();
+        initSqueezeBall();
+        initSandCanvas();
+        initWaterCanvas();
+        initFidgetSpinner();
+      });
+    });
+
+    /* Helper for Canvas Auto Size */
+    function resizeCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return false;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      return { width: rect.width, height: rect.height };
+    }
+
+    /* 1. SLIME PHYSICS */
+    let slimeColor = '#a55eea';
+    const slimeColors = ['#a55eea', '#2ecc71', '#ff4757', '#00f2fe', '#ffa502'];
+    function changeSlimeColor() {
+      slimeColor = slimeColors[(slimeColors.indexOf(slimeColor) + 1) % slimeColors.length];
+    }
+
+    function initSlimePhysics() {
+      const canvas = document.getElementById('slimeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dim = resizeCanvas(canvas) || { width: 280, height: 150 };
+
+      const numPoints = 16;
+      let centerX = dim.width / 2;
+      let centerY = dim.height / 2;
+      const radius = 38;
+      const points = [];
+
+      for (let i = 0; i < numPoints; i++) {
+        const angle = (i / numPoints) * Math.PI * 2;
+        points.push({
+          x: centerX + Math.cos(angle) * radius,
+          y: centerY + Math.sin(angle) * radius,
+          targetX: centerX + Math.cos(angle) * radius,
+          targetY: centerY + Math.sin(angle) * radius,
+          vx: 0, vy: 0
+        });
+      }
+
+      let dragPoint = null;
+      let mousePos = { x: centerX, y: centerY };
+
+      function getPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - r.left, y: clientY - r.top };
+      }
+
+      function startDrag(e) {
+        mousePos = getPos(e);
+        let minDist = Infinity;
+        points.forEach(p => {
+          const d = Math.hypot(p.x - mousePos.x, p.y - mousePos.y);
+          if (d < minDist) { minDist = d; dragPoint = p; }
+        });
+        if (minDist > radius * 2) dragPoint = null;
+      }
+
+      function moveDrag(e) {
+        if (!dragPoint) return;
+        mousePos = getPos(e);
+        dragPoint.x = mousePos.x;
+        dragPoint.y = mousePos.y;
+      }
+
+      function endDrag() { dragPoint = null; }
+
+      canvas.addEventListener('mousedown', startDrag);
+      canvas.addEventListener('mousemove', moveDrag);
+      window.addEventListener('mouseup', endDrag);
+
+      canvas.addEventListener('touchstart', startDrag);
+      canvas.addEventListener('touchmove', moveDrag);
+      window.addEventListener('touchend', endDrag);
+
+      function render() {
+        const r = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, r.width, r.height);
+
+        points.forEach(p => {
+          if (p !== dragPoint) {
+            const dx = p.targetX - p.x;
+            const dy = p.targetY - p.y;
+            p.vx += dx * 0.08;
+            p.vy += dy * 0.08;
+            p.vx *= 0.75;
+            p.vy *= 0.75;
+            p.x += p.vx;
+            p.y += p.vy;
+          }
+        });
+
+        ctx.beginPath();
+        ctx.fillStyle = slimeColor;
+        ctx.shadowColor = slimeColor;
+        ctx.shadowBlur = 10;
+
+        ctx.moveTo((points[0].x + points[numPoints - 1].x) / 2, (points[0].y + points[numPoints - 1].y) / 2);
+        for (let i = 0; i < numPoints; i++) {
+          const next = points[(i + 1) % numPoints];
+          const xc = (points[i].x + next.x) / 2;
+          const yc = (points[i].y + next.y) / 2;
+          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+        }
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        let avgX = points.reduce((s, p) => s + p.x, 0) / numPoints;
+        let avgY = points.reduce((s, p) => s + p.y, 0) / numPoints;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(avgX - 10, avgY - 4, 6, 0, Math.PI * 2);
+        ctx.arc(avgX + 10, avgY - 4, 6, 0, Math.PI * 2);
+        ctx.fill();
