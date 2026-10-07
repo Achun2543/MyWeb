@@ -136,6 +136,27 @@
       background: rgba(255,255,255,0.03);
     }
 
+    /* Squeeze Ball */
+    .squeeze-zone {
+      width: 100%;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+    }
+    .squeeze-ball {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253);
+      box-shadow: 0 10px 20px rgba(238, 82, 83, 0.4);
+      cursor: pointer;
+      transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     /* Pop It Grid */
     .pop-it-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0; }
     .pop-btn { 
@@ -154,9 +175,23 @@
       filter: brightness(0.75); 
     }
 
-    /* Fidget Spinner */
-    .spinner-container { width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; touch-action: none; }
-    .spinner { font-size: 55px; cursor: grab; user-select: none; display: inline-block; }
+    /* Fixed Working Fidget Spinner */
+    .spinner-container { 
+      width: 100%; 
+      height: 140px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      touch-action: none; 
+      cursor: grab;
+    }
+    .spinner-container:active { cursor: grabbing; }
+    .spinner { 
+      font-size: 70px; 
+      user-select: none; 
+      display: inline-block; 
+      transform-origin: center center;
+    }
 
     /* Bubble Wrap */
     .bubble-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 5px 0; }
@@ -203,7 +238,7 @@
 
   <div class="grid">
     <!-- 1. Realistic Physics Slime Canvas -->
-    <div class="card" style="grid-column: span 1;">
+    <div class="card">
       <div>
         <h3>1. Liquid Slime Simulator 🧪</h3>
         <p>Pull, stretch & squish soft jelly slime!</p>
@@ -212,453 +247,4 @@
       <button class="action-btn" onclick="changeSlimeColor()" style="font-size: 11px; padding: 5px 10px; margin-top:5px; background:#a55eea;">Change Color 🎨</button>
     </div>
 
-    <!-- 2. Kinetic Sand Slicing -->
-    <div class="card">
-      <div>
-        <h3>2. Kinetic Sand Cutter 🥪</h3>
-        <p>Drag across to slice satisfying sand blocks:</p>
-      </div>
-      <canvas id="sandCanvas" class="toy-canvas"></canvas>
-      <button class="action-btn" onclick="resetSand()" style="font-size: 11px; padding: 5px 10px; margin-top:5px; background:#718093;">Reset Sand Block</button>
-    </div>
-
-    <!-- 3. Water Ripple Wave -->
-    <div class="card">
-      <div>
-        <h3>3. Fluid Water Ripples 🌊</h3>
-        <p>Tap or drag to create liquid wave ripples:</p>
-      </div>
-      <canvas id="waterCanvas" class="toy-canvas"></canvas>
-      <div></div>
-    </div>
-
-    <!-- 4. Pop It Toy -->
-    <div class="card">
-      <div>
-        <h3>4. Pop It Board 🟪</h3>
-        <p>Pop the rubber bubbles:</p>
-      </div>
-      <div class="pop-it-grid">
-        <button class="pop-btn" style="background:#ff4757;" onclick="popBubble(this)"></button>
-        <button class="pop-btn" style="background:#ffa502;" onclick="popBubble(this)"></button>
-        <button class="pop-btn" style="background:#2ed573;" onclick="popBubble(this)"></button>
-        <button class="pop-btn" style="background:#1e90ff;" onclick="popBubble(this)"></button>
-        <button class="pop-btn" style="background:#3742fa;" onclick="popBubble(this)"></button>
-        <button class="pop-btn" style="background:#9b59b6;" onclick="popBubble(this)"></button>
-      </div>
-      <button class="action-btn" onclick="resetPopIt()" style="font-size: 11px; padding: 5px 10px; background: #718093;">Reset</button>
-    </div>
-
-    <!-- 5. Velocity Fidget Spinner -->
-    <div class="card">
-      <div>
-        <h3>5. Fidget Spinner 🌀</h3>
-        <p>Flick fast to spin!</p>
-      </div>
-      <div class="spinner-container" id="spinnerZone">
-        <div class="spinner" id="spinner">⚙️</div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 6. Infinite Bubble Wrap -->
-    <div class="card">
-      <div>
-        <h3>6. Bubble Wrap 🫧</h3>
-        <p>Endless bubble popping:</p>
-      </div>
-      <div class="bubble-wrap" id="bubbleWrapContainer"></div>
-      <div></div>
-    </div>
-
-    <!-- 7. Service Bell -->
-    <div class="card">
-      <div>
-        <h3>7. Desk Bell 🛎️</h3>
-        <p>Ring for service:</p>
-      </div>
-      <button class="bell-btn" onclick="ringBell()">🛎️</button>
-      <div id="bellCount" class="score">Rings: 0</div>
-    </div>
-
-    <!-- 8. Stubborn Switch -->
-    <div class="card">
-      <div>
-        <h3>8. Stubborn Switch 🔌</h3>
-        <p>Try switching it ON:</p>
-      </div>
-      <label class="switch">
-        <input type="checkbox" id="uselessSwitch" onchange="autoTurnOff(this)">
-        <span class="slider"></span>
-      </label>
-      <div></div>
-    </div>
-
-    <!-- 9. Unclickable Button -->
-    <div class="card" id="evadeContainer">
-      <div>
-        <h3>9. Unclickable Button 🏃</h3>
-        <p>Try to hover or touch:</p>
-      </div>
-      <button class="action-btn" id="runawayBtn" style="left: 35%; top: 55%;">Catch Me!</button>
-      <div></div>
-    </div>
-  </div>
-
-  <script>
-    // Theme setup
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    
-    window.addEventListener('DOMContentLoaded', () => {
-      const btn = document.getElementById('themeToggleBtn');
-      if (btn) btn.textContent = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
-      
-      // Init Bubble Wrap
-      const bwContainer = document.getElementById('bubbleWrapContainer');
-      for (let i = 0; i < 15; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        bubble.onclick = function() {
-          if (!this.classList.contains('popped')) {
-            this.classList.add('popped');
-            setTimeout(() => { this.classList.remove('popped'); }, 2000);
-          }
-        };
-        bwContainer.appendChild(bubble);
-      }
-
-      initSlimePhysics();
-      initSandCanvas();
-      initWaterCanvas();
-    });
-
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      const btn = document.getElementById('themeToggleBtn');
-      if (btn) btn.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
-    }
-
-    /* ----------------------------------------------------
-       1. REALISTIC SOFT LIQUID SLIME PHYSICS CANVAS
-    ---------------------------------------------------- */
-    let slimeColor = '#a55eea';
-    const slimeColors = ['#a55eea', '#2ecc71', '#ff4757', '#00f2fe', '#ffa502'];
-    function changeSlimeColor() {
-      slimeColor = slimeColors[(slimeColors.indexOf(slimeColor) + 1) % slimeColors.length];
-    }
-
-    function initSlimePhysics() {
-      const canvas = document.getElementById('slimeCanvas');
-      const ctx = canvas.getContext('2d');
-      let rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-
-      const numPoints = 16;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const radius = 42;
-      const points = [];
-
-      for (let i = 0; i < numPoints; i++) {
-        const angle = (i / numPoints) * Math.PI * 2;
-        points.push({
-          x: centerX + Math.cos(angle) * radius,
-          y: centerY + Math.sin(angle) * radius,
-          targetX: centerX + Math.cos(angle) * radius,
-          targetY: centerY + Math.sin(angle) * radius,
-          vx: 0, vy: 0, angle: angle
-        });
-      }
-
-      let dragPoint = null;
-      let mousePos = { x: centerX, y: centerY };
-
-      function getPos(e) {
-        const r = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { x: clientX - r.left, y: clientY - r.top };
-      }
-
-      function startDrag(e) {
-        mousePos = getPos(e);
-        let minDist = Infinity;
-        points.forEach(p => {
-          const d = Math.hypot(p.x - mousePos.x, p.y - mousePos.y);
-          if (d < minDist) { minDist = d; dragPoint = p; }
-        });
-        if (minDist > radius * 1.8) dragPoint = null;
-      }
-
-      function moveDrag(e) {
-        if (!dragPoint) return;
-        mousePos = getPos(e);
-        dragPoint.x = mousePos.x;
-        dragPoint.y = mousePos.y;
-      }
-
-      function endDrag() { dragPoint = null; }
-
-      canvas.addEventListener('mousedown', startDrag);
-      canvas.addEventListener('mousemove', moveDrag);
-      window.addEventListener('mouseup', endDrag);
-
-      canvas.addEventListener('touchstart', startDrag);
-      canvas.addEventListener('touchmove', moveDrag);
-      window.addEventListener('touchend', endDrag);
-
-      function render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Spring physics
-        points.forEach(p => {
-          if (p !== dragPoint) {
-            const dx = p.targetX - p.x;
-            const dy = p.targetY - p.y;
-            p.vx += dx * 0.08;
-            p.vy += dy * 0.08;
-            p.vx *= 0.75;
-            p.vy *= 0.75;
-            p.x += p.vx;
-            p.y += p.vy;
-          }
-        });
-
-        // Draw Slime Body
-        ctx.beginPath();
-        ctx.fillStyle = slimeColor;
-        ctx.shadowColor = slimeColor;
-        ctx.shadowBlur = 12;
-
-        ctx.moveTo((points[0].x + points[numPoints - 1].x) / 2, (points[0].y + points[numPoints - 1].y) / 2);
-        for (let i = 0; i < numPoints; i++) {
-          const next = points[(i + 1) % numPoints];
-          const xc = (points[i].x + next.x) / 2;
-          const yc = (points[i].y + next.y) / 2;
-          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-        }
-        ctx.fill();
-        ctx.shadowBlur = 0;
-
-        // Draw Cute Eyes
-        let avgX = points.reduce((s, p) => s + p.x, 0) / numPoints;
-        let avgY = points.reduce((s, p) => s + p.y, 0) / numPoints;
-
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(avgX - 12, avgY - 5, 7, 0, Math.PI * 2);
-        ctx.arc(avgX + 12, avgY - 5, 7, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#000000';
-        ctx.beginPath();
-        ctx.arc(avgX - 12, avgY - 5, 3, 0, Math.PI * 2);
-        ctx.arc(avgX + 12, avgY - 5, 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        requestAnimationFrame(render);
-      }
-      render();
-    }
-
-    /* ----------------------------------------------------
-       2. KINETIC SAND CUTTING CANVAS
-    ---------------------------------------------------- */
-    let sandSlices = [];
-    function initSandCanvas() {
-      const canvas = document.getElementById('sandCanvas');
-      const ctx = canvas.getContext('2d');
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-
-      resetSand();
-
-      let isSlicing = false;
-      let lastPos = { x: 0, y: 0 };
-
-      function getPos(e) {
-        const r = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { x: clientX - r.left, y: clientY - r.top };
-      }
-
-      function startSlice(e) {
-        isSlicing = true;
-        lastPos = getPos(e);
-      }
-
-      function sliceMove(e) {
-        if (!isSlicing) return;
-        const pos = getPos(e);
-        sandSlices.push({ x1: lastPos.x, y1: lastPos.y, x2: pos.x, y2: pos.y });
-        lastPos = pos;
-        drawSand();
-      }
-
-      function endSlice() { isSlicing = false; }
-
-      canvas.addEventListener('mousedown', startSlice);
-      canvas.addEventListener('mousemove', sliceMove);
-      window.addEventListener('mouseup', endSlice);
-
-      canvas.addEventListener('touchstart', startSlice);
-      canvas.addEventListener('touchmove', sliceMove);
-      window.addEventListener('touchend', endSlice);
-
-      drawSand();
-    }
-
-    function resetSand() {
-      sandSlices = [];
-      drawSand();
-    }
-
-    function drawSand() {
-      const canvas = document.getElementById('sandCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Sand Block
-      const bx = canvas.width * 0.2, by = 25, bw = canvas.width * 0.6, bh = 85;
-      ctx.fillStyle = '#f39c12';
-      ctx.fillRect(bx, by, bw, bh);
-
-      // Sand texture dots
-      ctx.fillStyle = '#d35400';
-      for (let i = 0; i < 80; i++) {
-        ctx.fillRect(bx + (i * 13) % bw, by + (i * 17) % bh, 2, 2);
-      }
-
-      // Cut lines
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 4;
-      ctx.lineCap = 'round';
-      sandSlices.forEach(s => {
-        ctx.beginPath();
-        ctx.moveTo(s.x1, s.y1);
-        ctx.lineTo(s.x2, s.y2);
-        ctx.stroke();
-      });
-    }
-
-    /* ----------------------------------------------------
-       3. FLUID WATER RIPPLES
-    ---------------------------------------------------- */
-    function initWaterCanvas() {
-      const canvas = document.getElementById('waterCanvas');
-      const ctx = canvas.getContext('2d');
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-
-      const ripples = [];
-
-      function createRipple(e) {
-        const r = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        ripples.push({
-          x: clientX - r.left,
-          y: clientY - r.top,
-          radius: 2,
-          alpha: 1
-        });
-      }
-
-      canvas.addEventListener('mousedown', createRipple);
-      canvas.addEventListener('touchmove', createRipple);
-
-      function renderWater() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (let i = ripples.length - 1; i >= 0; i--) {
-          const rp = ripples[i];
-          ctx.beginPath();
-          ctx.arc(rp.x, rp.y, rp.radius, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(0, 242, 254, ${rp.alpha})`;
-          ctx.lineWidth = 3;
-          ctx.stroke();
-
-          rp.radius += 2.5;
-          rp.alpha -= 0.025;
-
-          if (rp.alpha <= 0) ripples.splice(i, 1);
-        }
-        requestAnimationFrame(renderWater);
-      }
-      renderWater();
-    }
-
-    // Standard Controls
-    function popBubble(btn) { btn.classList.toggle('popped'); }
-    function resetPopIt() { document.querySelectorAll('.pop-btn').forEach(btn => btn.classList.remove('popped')); }
-
-    // Fidget Spinner
-    const spinner = document.getElementById('spinner');
-    const spinnerZone = document.getElementById('spinnerZone');
-    let angle = 0, velocity = 0, lastPos = { x: 0, y: 0 }, lastTime = Date.now();
-
-    function updateSpinner() {
-      if (Math.abs(velocity) > 0.1) {
-        angle += velocity;
-        velocity *= 0.96;
-        spinner.style.transform = `rotate(${angle}deg)`;
-      } else { velocity = 0; }
-      requestAnimationFrame(updateSpinner);
-    }
-    updateSpinner();
-
-    spinnerZone.addEventListener('mousemove', (e) => {
-      const now = Date.now(), dt = now - lastTime;
-      if (dt > 0) {
-        const dx = e.clientX - lastPos.x, dy = e.clientY - lastPos.y;
-        const speed = Math.sqrt(dx * dx + dy * dy) / dt;
-        if (speed > 0.2) velocity += speed * 2;
-      }
-      lastPos = { x: e.clientX, y: e.clientY };
-      lastTime = now;
-    });
-
-    let bellRings = 0;
-    function ringBell() {
-      bellRings++;
-      document.getElementById('bellCount').textContent = `Rings: ${bellRings}`;
-    }
-
-    function autoTurnOff(el) {
-      if (el.checked) { setTimeout(() => { el.checked = false; }, 250); }
-    }
-
-    // Evading Button
-    const evadeBtn = document.getElementById('runawayBtn');
-    const container = document.getElementById('evadeContainer');
-
-    function moveButton() {
-      const containerRect = container.getBoundingClientRect();
-      const btnRect = evadeBtn.getBoundingClientRect();
-      const maxX = containerRect.width - btnRect.width - 20;
-      const maxY = containerRect.height - btnRect.height - 20;
-
-      let newX = Math.max(10, Math.floor(Math.random() * maxX));
-      let newY = Math.max(50, Math.floor(Math.random() * maxY));
-
-      evadeBtn.style.left = `${newX}px`;
-      evadeBtn.style.top = `${newY}px`;
-    }
-
-    evadeBtn.addEventListener('mouseenter', moveButton);
-    evadeBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      moveButton();
-    });
-  </script>
-</body>
-</html> 
+    <!-- 2.
