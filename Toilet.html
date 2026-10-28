@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Throne & Co. | Peasant Prices, Royal Doomscrolling</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                        },
+                        royal: {
+                            800: '#1e1b4b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border {
+            border-image: linear-gradient(to right, #facc15, #eab308, #854d0e) 1;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.2); }
+            50% { box-shadow: 0 0 45px rgba(234, 179, 8, 0.45); }
+        }
+        .hero-glow { animation: pulse-glow 4s infinite ease-in-out; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #eab308; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Top Announcement Bar (Your Viral Ad Copy!) -->
+    <div class="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-slate-950 font-black text-xs sm:text-sm py-2.5 px-4 text-center tracking-wide flex items-center justify-center gap-2 shadow-lg z-50">
+        <span class="animate-bounce">📱</span>
+        <span>"No toilet? 😭 Where are you gonna hide and scroll for 45 minutes?! Get a royal throne at a peasant price."</span>
+        <a href="#products" class="underline ml-2 text-slate-900 hover:text-white font-extrabold transition-colors">SHOP SALE 👇</a>
+    </div>
+
+    <!-- Live Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-slate-900/95 text-white px-5 py-4 rounded-2xl shadow-2xl border border-yellow-500/40 flex items-center gap-3 backdrop-blur-md pointer-events-none max-w-md">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg shrink-0">
+            <i class="fa-solid fa-crown"></i>
+        </div>
+        <div>
+            <h5 id="toast-title" class="font-bold text-sm text-amber-300">Throne Secured!</h5>
+            <p id="toast-message" class="text-xs text-slate-300">Added to your stealth hiding cart.</p>
+        </div>
+    </div>
+
+    <!-- Leg Numbness Alert Widget (Fires after sitting on page for 20s) -->
+    <div id="numbness-alert" class="hidden fixed bottom-5 left-5 z-40 bg-red-950/90 border border-red-500/50 text-red-200 p-4 rounded-2xl shadow-2xl backdrop-blur-md max-w-xs animate-bounce">
+        <div class="flex items-start gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-red-400 text-xl mt-0.5"></i>
+            <div>
+                <h4 class="font-extrabold text-xs uppercase tracking-wider text-red-400">LEGS NUMBNESS WARNING</h4>
+                <p class="text-xs text-slate-300 mt-1">You've been looking at toilets for 45 minutes. Stand up slowly or activate seat vibration!</p>
+                <button onclick="dismissNumbnessAlert()" class="mt-2 text-[10px] bg-red-500/30 hover:bg-red-500/50 text-red-100 font-bold px-3 py-1 rounded-full transition-all">I've Wiggled My Toes 👍</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-600 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200">
+                        <i class="fa-solid fa-toilet text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-tight text-white block leading-none">THRONE <span class="gold-gradient-text">& CO.</span></span>
+                        <span class="text-[9px] tracking-widest text-amber-400 font-bold uppercase">Peasant Prices • Royal Scrolling</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex space-x-8 text-sm font-semibold text-slate-300">
+                    <a href="#products" class="hover:text-amber-400 transition-colors py-1">Thrones</a>
+                    <a href="#scroll-timer" class="hover:text-amber-400 transition-colors py-1">45-Min Doomscroll Engine</a>
+                    <a href="#calculator" class="hover:text-amber-400 transition-colors py-1">Boss-Ducking Calculator</a>
+                    <a href="#reviews" class="hover:text-amber-400 transition-colors py-1">Hiding Reviews</a>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Cart Button -->
+                    <button id="cart-btn" onclick="toggleCartDrawer()" class="relative p-3 text-slate-200 hover:text-amber-400 hover:bg-slate-800/80 rounded-2xl transition-all border border-slate-700/60">
+                        <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-amber-500 text-slate-950 text-xs font-black rounded-full h-5 w-5 flex items-center justify-center shadow-md shadow-amber-500/30">0</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 text-slate-300 hover:text-amber-400 rounded-xl">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-800 bg-slate-950 px-4 pt-2 pb-6 space-y-3">
+            <a href="#products" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 font-semibold">Thrones Collection</a>
+            <a href="#scroll-timer" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 font-semibold">45-Min Doomscroll Engine</a>
+            <a href="#calculator" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 font-semibold">Boss-Ducking Calculator</a>
+            <a href="#reviews" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 font-semibold">Hiding Reviews</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden py-16 lg:py-24 border-b border-slate-800/80">
+            <!-- Background Glow FX -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Hero Text -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                            <i class="fa-solid fa-fire text-amber-400"></i> The #1 Rated Office & Family Escape Device
+                        </div>
+                        
+                        <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-none text-white">
+                            NO TOILET? 😭 <br>
+                            WHERE ARE YOU GONNA <br>
+                            <span class="gold-gradient-text">HIDE & SCROLL?</span>
+                        </h1>
+                        
+                        <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+                            Stop sitting on cold floor tiles or hiding behind the water cooler. Get a <strong class="text-amber-400">Royal Throne</strong> equipped with built-in MagSafe phone charging, TikTok foot pedals, and anti-leg-numbness seat warmth at a <strong class="text-amber-400">Peasant Price</strong>.
+                        </p>
+
+                        <!-- Doomscroll Timer Widget -->
+                        <div id="scroll-timer" class="p-5 rounded-3xl bg-slate-900/90 border border-amber-500/30 max-w-lg mx-auto lg:mx-0 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                                <span class="text-xs font-bold text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
+                                    <i class="fa-solid fa-stopwatch animate-spin text-sm"></i> Active Doomscroll Session
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="fastForwardTimer()" class="text-[10px] bg-red-500/20 hover:bg-red-500/40 text-red-300 px-2 py-0.5 rounded-full font-mono border border-red-500/30 transition-all">
+                                        ⚡ Test 00:00
+                                    </button>
+                                    <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-mono">STATUS: UNSPOTTED</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div id="timer-display" class="text-3xl font-black font-mono text-white tracking-widest">45:00</div>
+                                    <span class="text-[11px] text-slate-400">Time hiding from responsibilities</span>
+                                </div>
+                                <div class="text-right">
+                                    <span id="numbness-risk" class="text-xs font-bold text-amber-400 block">Leg Numbness: LOW</span>
+                                    <button onclick="toggleTimer()" id="timer-btn" class="mt-1 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-lg transition-all">
+                                        Pause Session
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CTA buttons -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                            <a href="#products" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-sm uppercase tracking-wider rounded-2xl shadow-xl shadow-amber-500/20 transform hover:-translate-y-0.5 transition-all text-center flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-crown text-base"></i> CLAIM A PEASANT THRONE
+                            </a>
+                            <a href="#calculator" class="w-full sm:w-auto px-8 py-4 bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-extrabold text-sm rounded-2xl transition-all text-center flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-calculator text-amber-400"></i> BOSS-DUCKING CALCULATOR
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Hero Visual / Feature Card -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="glass-panel p-8 rounded-3xl border border-amber-500/30 hero-glow relative overflow-hidden">
+                            <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl"></div>
+                            
+                            <div class="text-center py-6">
+                                <div class="w-28 h-28 mx-auto mb-4 rounded-3xl bg-gradient-to-b from-slate-800 to-slate-950 border border-amber-500/40 flex items-center justify-center shadow-inner relative group">
+                                    <i class="fa-solid fa-toilet text-6xl text-amber-400 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] group-hover:scale-110 transition-transform duration-300"></i>
+                                    <div class="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full border border-slate-950">
+                                        PRO 9000
+                                    </div>
+                                </div>
+                                <h3 class="text-2xl font-black text-white">THE SCROLLKING 9000</h3>
+                                <p class="text-amber-400 font-extrabold text-sm tracking-wide mt-1">PEASANT PRICE: $299.99 <span class="text-slate-500 line-through text-xs font-normal">$1,499.00</span></p>
+                            </div>
+
+                            <!-- Absurd Spec Highlights -->
+                            <div class="space-y-3 pt-4 border-t border-slate-800 text-xs text-slate-300">
+                                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800">
+                                    <span class="flex items-center gap-2 font-semibold"><i class="fa-solid fa-bolt text-amber-400"></i> MagSafe Phone Charger</span>
+                                    <span class="text-emerald-400 font-bold">15W Fast</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800">
+                                    <span class="flex items-center gap-2 font-semibold"><i class="fa-solid fa-shoe-prints text-amber-400"></i> TikTok Hands-Free Pedal</span>
+                                    <span class="text-amber-400 font-bold">Included</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800">
+                                    <span class="flex items-center gap-2 font-semibold"><i class="fa-solid fa-person-shelter text-amber-400"></i> Boss Motion Detector</span>
+                                    <span class="text-cyan-400 font-bold">15m Radar</span>
+                                </div>
+                            </div>
+
+                            <button onclick="addToCart(1)" class="w-full mt-6 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cart-plus"></i> HIDE IN COMFORT - ADD TO CART
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Satirical Products Catalog -->
+        <section id="products" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14 space-y-3">
+                <span class="text-amber-400 font-mono font-bold text-xs uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
+                    ROYAL SELECTION • PEASANT PRICING
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                    PICK YOUR ESCAPE POD
+                </h2>
+                <p class="text-slate-400 text-sm">
+                    Engineered specifically for extended doomscrolling, dodging chores, and escaping office meetings.
+                </p>
+            </div>
+
+            <!-- Product Grid Wrapper -->
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Dynamically populated via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Boss-Ducking Wage Calculator Section -->
+        <section id="calculator" class="py-16 bg-slate-950 border-y border-slate-800">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-4">
+                    <i class="fa-solid fa-sack-dollar"></i> Paid-To-Poop Math
+                </div>
+                <h2 class="text-3xl font-black text-white">BOSS-DUCKING ROI CALCULATOR</h2>
+                <p class="text-slate-400 text-xs mt-2 max-w-md mx-auto">Calculate how much money your employer pays you every year while you are sitting in the bathroom scrolling TikTok.</p>
+
+                <div class="mt-8 bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl max-w-xl mx-auto space-y-5 text-left">
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 block mb-2">Hourly Wage ($ / hr)</label>
+                        <input type="number" id="calc-wage" value="35" oninput="calculateSavings()" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-amber-400 font-black text-lg outline-none focus:border-amber-400">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 block mb-2">Daily Bathroom Hiding Minutes</label>
+                        <input type="number" id="calc-mins" value="45" oninput="calculateSavings()" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-amber-400 font-black text-lg outline-none focus:border-amber-400">
+                    </div>
+                    <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-center">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Your Annual "Paid To Scroll" Salary</span>
+                        <div id="calc-result" class="text-3xl sm:text-4xl font-black text-amber-400 mt-1">$6,562.50</div>
+                        <span class="text-[10px] text-slate-500 mt-1 block">Your Throne pays for itself in less than 3 weeks!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Satirical Customer Reviews -->
+        <section id="reviews" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <section id="reviews" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl font-black text-white">TESTIMONIALS FROM CERTIFIED HIDERS</h2>
+                <p class="text-slate-400 text-sm mt-1">Real reviews from people currently sitting in their bathroom right now.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 shadow-md">
+                    <div class="flex text-amber-400 text-xs mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs italic mb-4">"The Corporate Escape Pod saved my mental health. I put the fake Zoom keyboard sound effect on while I watch TikToks. My manager thinks I'm hard at work."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-amber-500/20 text-amber-400 font-black flex items-center justify-center text-sm">D</div>
+                        <div>
+                            <h4 class="font-bold text-white text-xs">Dave K.</h4>
+                            <span class="text-[10px] text-slate-500">Senior Bathroom Hider (Middle Management)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 shadow-md">
+                    <div class="flex text-amber-400 text-xs mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs italic mb-4">"I have 3 toddlers. The ScrollKing 9000 is the only place in my house where nobody asks me for snacks. The heated seat and MagSafe charger are life changing."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-cyan-500/20 text-cyan-400 font-black flex items-center justify-center text-sm">M</div>
+                        <div>
+                            <h4 class="font-bold text-white text-xs">Michelle R.</h4>
+                            <span class="text-[10px] text-slate-500">Mother of 3, Tired Adult</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 shadow-md">
+                    <div class="flex text-amber-400 text-xs mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs italic mb-4">"Bought the CyberThrone RGB for my gaming setup. Syncs with my RGB keyboard when I flush. Truly royal vibe at a peasant price."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-purple-500/20 text-purple-400 font-black flex items-center justify-center text-sm">xX</div>
+                        <div>
+                            <h4 class="font-bold text-white text-xs">xX_ThroneGod_Xx</h4>
+                            <span class="text-[10px] text-slate-500">Professional Gamer & Scroller</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Emergency 00:00 Zero Timer Numbness Crisis Modal -->
+    <div id="emergency-modal" class="fixed inset-0 bg-red-950/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-950 border-2 border-red-500 rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center relative shadow-[0_0_80px_rgba(239,68,68,0.5)] transform scale-95 transition-transform duration-300 animate-pulse">
+            
+            <div class="w-20 h-20 rounded-3xl bg-red-500/20 text-red-500 border border-red-500/50 flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">
+                <i class="fa-solid fa-triangle-exclamation animate-bounce"></i>
+            </div>
+
+            <span class="text-red-500 font-mono font-black text-xs tracking-widest uppercase bg-red-500/10 px-3 py-1 rounded-full border border-red-500/30">
+                🚨 DEFCON 1: LEG NUMBNESS MAXED
+            </span>
+
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
+                45 MINUTES IS UP! <br>
+                <span class="text-red-400">YOUR LEGS ARE 100% NUMB.</span>
+            </h2>
+
+            <p class="text-slate-300 text-xs sm:text-sm mt-3 leading-relaxed">
+                You have officially spent 45 minutes hiding on the throne. Your legs have turned into cooked spaghetti, your feet have lost sensory feedback, and your boss is currently pacing near your cubicle.
+            </p>
+
+            <div class="my-5 p-4 bg-slate-900 border border-red-500/30 rounded-2xl text-left space-y-2 text-xs">
+                <div class="flex justify-between text-slate-300 font-mono">
+                    <span>Blood Flow to Lower Toes:</span>
+                    <span class="text-red-400 font-bold">0.02%</span>
+                </div>
+                <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                    <div class="bg-red-500 h-full w-[2%] animate-pulse"></div>
+                </div>
+                <div class="flex justify-between text-slate-400 text-[11px] pt-1">
+                    <span>Boss Location:</span>
+                    <span class="text-amber-400 font-bold">Approaching Restroom Door</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <button onclick="triggerEmergencyFlush()" class="w-full py-3.5 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-toilet"></i> STEALTH FLUSH & STAND
+                </button>
+                <button onclick="snoozeEmergencyModal()" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-bold text-xs rounded-xl">
+                    Wiggle Toes (5 More Mins)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-10 text-xs text-slate-500 text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-slate-400 font-bold">THRONE & CO. &copy; 2026. SATIRE / FAKE PARODY E-COMMERCE SITE.</p>
+            <p class="mt-1 text-slate-600">Please remember to stretch your legs every 20 minutes while scrolling on social media.</p>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Drawer -->
+    <div id="cart-drawer-overlay" onclick="toggleCartDrawer()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-crown text-amber-400 text-lg"></i>
+                <h3 class="font-black text-white text-base">Your Hiding Stash Cart</h3>
+            </div>
+            <button onclick="toggleCartDrawer()" class="p-2 text-slate-400 hover:text-white rounded-xl">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <div id="cart-items-container" class="flex-grow overflow-y-auto p-5 space-y-4">
+            <!-- Dynamic Cart Items -->
+        </div>
+
+        <div class="p-5 border-t border-slate-800 bg-slate-950 space-y-4">
+            <div class="space-y-1.5 text-xs">
+                <div class="flex justify-between text-slate-400">
+                    <span>Peasant Subtotal</span>
+                    <span id="cart-subtotal" class="font-bold text-white">$0.00</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Stealth Boss Shipping</span>
+                    <span class="text-emerald-400 font-bold">FREE (Disguised Box)</span>
+                </div>
+                <div class="flex justify-between text-base font-black text-amber-400 pt-2 border-t border-slate-800">
+                    <span>Total</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+            </div>
+            <button onclick="openCheckoutModal()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                PROCEED TO PEASANT CHECKOUT <i class="fa-solid fa-lock text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Satirical Quick View Modal -->
+    <div id="quickview-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 relative transform scale-95 transition-transform duration-300" id="quickview-card">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div id="quickview-content"></div>
+        </div>
+    </div>
+
+    <!-- Satirical Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-900 border border-amber-500/30 rounded-3xl max-w-md w-full p-6 text-center relative shadow-2xl">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div id="checkout-form-container">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-3 text-2xl">
+                    <i class="fa-solid fa-shield-cat"></i>
+                </div>
+                <h3 class="text-xl font-black text-white">Fake Satire Checkout</h3>
+                <p class="text-xs text-slate-400 mt-1 mb-4">Try typing discount code <span class="text-amber-400 font-mono font-bold">BOSSISLOOKING</span> or <span class="text-amber-400 font-mono font-bold">PEASANT50</span>!</p>
+
+                <form onsubmit="handleCheckout(event)" class="space-y-3 text-left">
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-300 block mb-1">Your Alias</label>
+                        <input type="text" required placeholder="Stealth Hider" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-amber-400">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-300 block mb-1">Secret Promo Code</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="promo-input" placeholder="e.g. BOSSISLOOKING" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-amber-400">
+                            <button type="button" onclick="applyPromo()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs rounded-xl">Apply</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-300 block mb-1">Fake Credit Card (Any 16 digits)</label>
+                        <input type="text" maxlength="16" placeholder="4532 0000 0000 9999" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white outline-none focus:border-amber-400">
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg mt-3">
+                        Simulate Order ($<span id="checkout-amount">0.00</span>)
+                    </button>
+                </form>
+            </div>
+
+            <div id="checkout-success" class="hidden py-6 space-y-3">
+                <div class="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-2xl animate-bounce">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">THRONE SECURED!</h3>
+                <p class="text-xs text-slate-300">Your throne will arrive in a plain cardboard box disguised as a boring office filing cabinet.</p>
+                <button onclick="closeCheckoutModal()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl">
+                    Back To Hiding
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        // Satirical Products Database
+        const products = [
+            {
+                id: 1,
+                name: "The ScrollKing 9000 Pro",
+                tag: "Flagship Hider",
+                price: 299.99,
+                origPrice: 1499.00,
+                rating: 4.98,
+                iconClass: "fa-mobile-screen-button text-amber-400",
+                description: "Built-in MagSafe 15W phone charger on tank lid, TikTok foot pedal for hands-free scrolling, heated seat, and leg-numbness pulse massage.",
+                features: ["MagSafe 15W Fast Charge", "TikTok Next-Video Foot Pedal", "3-Level Seat Heating", "Silent Stealth Flush Mode"]
+            },
+            {
+                id: 2,
+                name: "The Corporate Escape Pod",
+                tag: "Office Favorite",
+                price: 199.99,
+                origPrice: 899.00,
+                rating: 4.92,
+                iconClass: "fa-user-ninja text-cyan-400",
+                description: "Designed for hiding from your boss during work hours. Features acoustic soundproofing, white noise flush, and fake keyboard typing speakers.",
+                features: ["Fake Mechanical Keyboard Audio Generator", "Acoustic Noise Cancellation Lid", "Anti-Footprint Outer Finish", "Under-Door Motion Sensor"]
+            },
+            {
+                id: 3,
+                name: "The Royal Peasant Economy Bowl",
+                tag: "Peasant Price!",
+                price: 79.99,
+                origPrice: 350.00,
+                rating: 4.85,
+                iconClass: "fa-crown text-yellow-300",
+                description: "Royal vibe at a budget peasant price! Includes cardboard smartphone dock, ergonomic footrest squat stool, and emergency leg-stretcher.",
+                features: ["Universal Cardboard Phone Stand", "Built-In Squat Foot Rest", "Emergency Toe-Wiggler Bar", "Gold Spray-Painted Rim"]
+            },
+            {
+                id: 4,
+                name: "The CyberThrone RGB 120Hz",
+                tag: "Gamer Special",
+                price: 349.99,
+                origPrice: 1200.00,
+                rating: 4.96,
+                iconClass: "fa-gamepad text-purple-400",
+                description: "16.8 Million RGB lighting zones synced to Discord notifications, 120Hz heated seat surface, and ultra-low latency quiet flush.",
+                features: ["Razer Chroma Compatible RGB", "Discord Notification Seat Pulse", "120Hz Fast-Warming Surface", "Hydration Warning LED"]
+            }
+        ];
+
+        let cart = [];
+        let timerSeconds = 2700; // 45 minutes
+        let timerRunning = true;
+        let timerInterval;
+
+        // Audio Context Synthesizer for Emergency Sound Effects
+        let audioCtx;
+
+        function playEmergencyAlarm() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Alarm siren tone
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.4);
+                
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log("Audio play blocked or unsupported");
+            }
+        }
+
+        function playFlushSound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // White noise generator simulating a massive flush
+                const bufferSize = audioCtx.sampleRate * 1.5;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 1.5);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start();
+            } catch(e) {}
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            startScrollTimer();
+            setTimeout(() => {
+                document.getElementById('numbness-alert').classList.remove('hidden');
+            }, 12000); // Trigger funny numbness popup after 12s
+        });
+
+        function renderProducts() {
+            const container = document.getElementById('product-grid');
+            container.innerHTML = '';
+
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-3xl p-5 flex flex-col justify-between hover:border-amber-500/50 transition-all duration-300 group shadow-xl";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                                ${p.tag}
+                            </span>
+                            <span class="text-xs text-amber-400 font-bold"><i class="fa-solid fa-star"></i> ${p.rating}</span>
+                        </div>
+
+                        <div class="w-full h-40 bg-slate-950 rounded-2xl flex items-center justify-center my-3 relative overflow-hidden group-hover:scale-[1.02] transition-transform">
+                            <i class="fa-solid ${p.iconClass} text-6xl drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]"></i>
+                        </div>
+
+                        <h3 class="text-lg font-black text-white group-hover:text-amber-400 transition-colors">${p.name}</h3>
+                        <p class="text-slate-400 text-xs mt-1.5 leading-relaxed">${p.description}</p>
+
+                        <ul class="mt-3 space-y-1 text-[11px] text-slate-300">
+                            ${p.features.map(f => `<li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-amber-400 text-[10px]"></i> ${f}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-slate-500 text-[10px] line-through block">$${p.origPrice.toFixed(2)}</span>
+                            <span class="text-xl font-black text-amber-400">$${p.price.toFixed(2)}</span>
+                        </div>
+                        <button onclick="addToCart(${p.id})" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-black text-xs transition-all shadow-md shadow-amber-500/20">
+                            + ADD TO CART
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Timer Logic
+        function startScrollTimer() {
+            timerInterval = setInterval(() => {
+                if (timerRunning && timerSeconds > 0) {
+                    timerSeconds--;
+                    updateTimerUI();
+
+                    if (timerSeconds === 0) {
+                        triggerZeroEmergency();
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timer-display').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            
+            const riskEl = document.getElementById('numbness-risk');
+            if (timerSeconds === 0) {
+                riskEl.textContent = "Leg Numbness: MAXIMUM 🚨";
+                riskEl.className = "text-xs font-bold text-red-500 block animate-bounce";
+            } else if (timerSeconds < 600) {
+                riskEl.textContent = "Leg Numbness: CRITICAL ⚠️";
+                riskEl.className = "text-xs font-bold text-red-400 block animate-pulse";
+            } else if (timerSeconds < 2100) {
+                riskEl.textContent = "Leg Numbness: MODERATE 🦵";
+                riskEl.className = "text-xs font-bold text-amber-400 block";
+            }
+        }
+
+        function fastForwardTimer() {
+            timerSeconds = 3; // Jump to 3 seconds left so user sees it count down to 00:00!
+            updateTimerUI();
+        }
+
+        function triggerZeroEmergency() {
+            timerRunning = false;
+            playEmergencyAlarm();
+            const modal = document.getElementById('emergency-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            showToast("⚠️ DEFCON 1 LEG NUMBNESS", "45 minutes reached! Please wiggle your toes immediately.");
+        }
+
+        function triggerEmergencyFlush() {
+            playFlushSound();
+            closeEmergencyModal();
+            timerSeconds = 2700; // Reset back to 45 mins
+            timerRunning = true;
+            updateTimerUI();
+            showToast("🌊 Stealth Flush Activated", "Timer reset. You survived another session!");
+        }
+
+        function snoozeEmergencyModal() {
+            closeEmergencyModal();
+            timerSeconds = 300; // Give 5 extra minutes
+            timerRunning = true;
+            updateTimerUI();
+            showToast("🦵 Toes Wiggled", "Added +5 minutes of high-risk scrolling time.");
+        }
+
+        function closeEmergencyModal() {
+            const modal = document.getElementById('emergency-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function toggleTimer() {
+            timerRunning = !timerRunning;
+            document.getElementById('timer-btn').textContent = timerRunning ? "Pause Session" : "Resume Session";
+        }
+
+        function dismissNumbnessAlert() {
+            document.getElementById('numbness-alert').classList.add('hidden');
+        }
+
+        // Boss Savings Calculator
+        function calculateSavings() {
+            const wage = parseFloat(document.getElementById('calc-wage').value) || 0;
+            const mins = parseFloat(document.getElementById('calc-mins').value) || 0;
+            
+            // 250 work days per year
+            const annualIncome = (wage / 60) * mins * 250;
+            document.getElementById('calc-result').textContent = `$${annualIncome.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        // Cart Drawer
+        function addToCart(id) {
+            const p = products.find(prod => prod.id === id);
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...p, qty: 1 });
+            }
+            updateCartUI();
+            showToast("Throne Secured!", `Added "${p.name}" to stash.`);
+        }
+
+        function updateCartUI() {
+            const countEl = document.getElementById('cart-count');
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            const checkoutAmt = document.getElementById('checkout-amount');
+
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            countEl.textContent = totalQty;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 text-slate-500">
+                        <i class="fa-solid fa-toilet text-5xl mb-3 opacity-30"></i>
+                        <p class="font-bold text-slate-400 text-sm">Your escape cart is empty</p>
+                        <p class="text-xs mt-1">Claim a throne to hide in peace.</p>
+                    </div>
+                `;
+                subtotalEl.textContent = "$0.00";
+                totalEl.textContent = "$0.00";
+                if (checkoutAmt) checkoutAmt.textContent = "0.00";
+                return;
+            }
+
+            let subtotal = 0;
+            container.innerHTML = '';
+
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                const el = document.createElement('div');
+                el.className = "flex items-center space-x-3 p-3 bg-slate-950 border border-slate-800 rounded-2xl";
+                el.innerHTML = `
+                    <div class="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-amber-400 text-xl font-bold shrink-0">
+                        <i class="fa-solid ${item.iconClass}"></i>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <h4 class="font-bold text-white text-xs truncate">${item.name}</h4>
+                        <span class="text-xs text-amber-400 font-bold">$${item.price.toFixed(2)}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-400 font-bold">x${item.qty}</span>
+                        <button onclick="removeFromCart(${item.id})" class="text-slate-500 hover:text-red-400 p-1">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+
+            const formatted = `$${subtotal.toFixed(2)}`;
+            subtotalEl.textContent = formatted;
+            totalEl.textContent = formatted;
+            if (checkoutAmt) checkoutAmt.textContent = subtotal.toFixed(2);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-drawer-overlay');
+            const isOpen = !drawer.classList.contains('translate-x-full');
+
+            if (isOpen) {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Checkout Modal Logic
+        function openCheckoutModal() {
+            if (cart.length === 0) return;
+            toggleCartDrawer();
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeCheckoutModal() {
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                document.getElementById('checkout-form-container').classList.remove('hidden');
+                document.getElementById('checkout-success').classList.add('hidden');
+            }, 300);
+        }
+
+        function applyPromo() {
+            const input = document.getElementById('promo-input').value.toUpperCase();
+            if (input === "BOSSISLOOKING" || input === "PEASANT50") {
+                showToast("Promo Code Applied!", "100% Peasant Discount activated.");
+                document.getElementById('checkout-amount').textContent = "0.00";
+            } else {
+                showToast("Invalid Promo", "Try 'BOSSISLOOKING' instead!");
+            }
+        }
+
+        function handleCheckout(e) {
+            e.preventDefault();
+            document.getElementById('checkout-form-container').classList.add('hidden');
+            document.getElementById('checkout-success').classList.remove('hidden');
+            cart = [];
+            updateCartUI();
+        }
+
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-message').textContent = msg;
+
+            toast.classList.remove('translate-y-28', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-28', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
