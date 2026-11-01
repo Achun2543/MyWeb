@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombux - SlimeBankInc Economy Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darker: '#0b0f19',
+                        carddark: '#131c2e',
+                        slime: '#10b981',
+                        slimehover: '#059669'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darker text-gray-100 min-h-screen font-sans antialiased flex flex-col justify-between selection:bg-slime selection:text-white">
+
+    <!-- Global Ticker -->
+    <div class="bg-emerald-950/80 border-b border-emerald-800/40 text-emerald-300 px-4 py-2 text-xs font-medium flex items-center justify-between overflow-hidden shadow-inner">
+        <div class="flex items-center space-x-2 whitespace-nowrap animate-pulse">
+            <span class="bg-emerald-600 text-white text-[10px] uppercase px-1.5 py-0.5 rounded font-bold tracking-wider">LIVE NEWS</span>
+            <span id="ticker-text">SlimeBankInc economy live sync online. Stock market open!</span>
+        </div>
+        <div id="admin-badge-banner" class="hidden text-[11px] text-yellow-400 font-bold px-2 py-0.5 bg-yellow-500/10 border border-yellow-500/30 rounded">
+            👑 Owner Mode Active
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-carddark/90 backdrop-blur border-b border-gray-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-emerald-600 to-teal-400 p-2.5 rounded-xl shadow-lg shadow-emerald-900/40 text-white font-black text-xl tracking-wider">
+                    TBX
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-tight text-white flex items-center gap-2">
+                        Tombux <span class="text-xs px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">SlimeBankInc</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">Decentralized Economy & Stock Market</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <div id="user-wallet-preview" class="hidden items-center bg-gray-900/80 border border-gray-800 px-3 py-1.5 rounded-xl text-sm">
+                    <span class="text-gray-400 mr-1.5 text-xs">Balance:</span>
+                    <span id="header-balance" class="font-extrabold text-emerald-400">0.00 Ŧ</span>
+                </div>
+                <div id="auth-action-area">
+                    <button onclick="openAuthModal('login')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-4 py-2 rounded-xl transition shadow-lg shadow-emerald-900/30">
+                        <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Log In / Sign Up
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full space-y-6">
+
+        <!-- Welcome Banner -->
+        <div id="welcome-banner" class="bg-gradient-to-r from-emerald-900/40 via-carddark to-carddark border border-emerald-500/30 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-white mb-1">Welcome to Tombux Virtual Economy!</h2>
+                <p class="text-sm text-gray-300">Log in or sign up to trade stocks, deposit in SlimeBankInc, transfer funds, take loans, and earn money.</p>
+            </div>
+            <button onclick="openAuthModal('login')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl transition shadow-lg shrink-0">
+                Get Started
+            </button>
+        </div>
+
+        <!-- App Container -->
+        <div id="main-app-container" class="hidden space-y-6">
+            
+            <!-- Tabs Navigation -->
+            <div class="flex overflow-x-auto space-x-2 bg-carddark/60 p-1.5 rounded-2xl border border-gray-800 scrollbar-none">
+                <button onclick="switchTab('dashboard')" class="tab-btn active flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-emerald-400 bg-emerald-500/10">
+                    <i class="fa-solid fa-chart-pie"></i><span>Dashboard</span>
+                </button>
+                <button onclick="switchTab('market')" class="tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-chart-line"></i><span>Stock Market</span>
+                </button>
+                <button onclick="switchTab('bank')" class="tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-building-columns"></i><span>SlimeBankInc</span>
+                </button>
+                <button onclick="switchTab('transfer')" class="tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-right-left"></i><span>P2P Transfer</span>
+                </button>
+                <button onclick="switchTab('jobs')" class="tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-hammer"></i><span>Jobs & Quests</span>
+                </button>
+                <button onclick="switchTab('leaderboard')" class="tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-trophy"></i><span>Leaderboard</span>
+                </button>
+                <button id="admin-tab-btn" onclick="switchTab('admin')" class="hidden tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-yellow-400 hover:bg-yellow-500/10">
+                    <i class="fa-solid fa-shield-halved"></i><span>Owner Panel</span>
+                </button>
+            </div>
+
+            <!-- Tab 1: Dashboard -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-carddark border border-gray-800 p-5 rounded-2xl shadow-lg">
+                        <div class="text-gray-400 text-xs font-semibold mb-1">Available Balance</div>
+                        <div id="dash-balance" class="text-2xl font-black text-emerald-400">0.00 Ŧ</div>
+                        <div class="text-[11px] text-gray-500 mt-2">Ready for transfer & trading</div>
+                    </div>
+                    <div class="bg-carddark border border-gray-800 p-5 rounded-2xl shadow-lg">
+                        <div class="text-gray-400 text-xs font-semibold mb-1">SlimeBankInc Vault</div>
+                        <div id="dash-savings" class="text-2xl font-black text-teal-400">0.00 Ŧ</div>
+                        <div class="text-[11px] text-teal-500/80 mt-2">Earning 5% comp/min</div>
+                    </div>
+                    <div class="bg-carddark border border-gray-800 p-5 rounded-2xl shadow-lg">
+                        <div class="text-gray-400 text-xs font-semibold mb-1">Credit Score & Rating</div>
+                        <div class="flex items-baseline space-x-2">
+                            <span id="dash-credit-score" class="text-2xl font-black text-blue-400">750</span>
+                            <span id="dash-credit-rating" class="text-xs font-bold px-2 py-0.5 bg-blue-500/20 text-blue-300 rounded border border-blue-500/30">AAA</span>
+                        </div>
+                        <div class="text-[11px] text-gray-500 mt-2">Influences loan & overdraft limits</div>
+                    </div>
+                    <div class="bg-carddark border border-gray-800 p-5 rounded-2xl shadow-lg">
+                        <div class="text-gray-400 text-xs font-semibold mb-1">Total Net Worth</div>
+                        <div id="dash-networth" class="text-2xl font-black text-purple-400">0.00 Ŧ</div>
+                        <div class="text-[11px] text-gray-500 mt-2">Cash + Vault + Stocks</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg lg:col-span-1 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear text-emerald-400"></i> Account Profile
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between pb-2 border-b border-gray-800">
+                                <span class="text-gray-400">Username</span>
+                                <span id="profile-username" class="font-bold text-white">--</span>
+                            </div>
+                            <div class="flex justify-between pb-2 border-b border-gray-800">
+                                <span class="text-gray-400">Email</span>
+                                <span id="profile-email" class="text-gray-300 text-xs">--</span>
+                            </div>
+                            <div class="flex justify-between pb-2 border-b border-gray-800">
+                                <span class="text-gray-400">Role</span>
+                                <span id="profile-role" class="font-bold text-emerald-400">User</span>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 font-semibold py-2 rounded-xl transition text-sm">
+                            <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Log Out
+                        </button>
+                    </div>
+
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg lg:col-span-2 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-emerald-400"></i> Recent Activity Logs
+                        </h3>
+                        <div id="recent-activity-list" class="space-y-2 max-h-56 overflow-y-auto pr-2">
+                            <div class="text-center text-gray-500 py-6 text-sm">No activity records yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Stock Market -->
+            <div id="tab-market" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="space-y-6">
+                        <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg space-y-4">
+                            <h3 class="font-bold text-white text-base">Select Asset</h3>
+                            <div id="stock-selector-list" class="space-y-2"></div>
+                        </div>
+
+                        <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h3 id="trade-panel-title" class="font-bold text-white text-base">Trade Asset</h3>
+                                <span id="trade-current-price" class="text-emerald-400 font-extrabold text-lg">0.00 Ŧ</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-xs text-gray-400 mb-1 block">Shares Amount</label>
+                                    <input type="number" id="trade-shares-input" min="1" value="10" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-400">
+                                    <span>Total Cost: <strong id="trade-total-cost" class="text-white">0.00 Ŧ</strong></span>
+                                    <span>Owned: <strong id="trade-user-shares" class="text-emerald-400">0</strong> shares</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 pt-2">
+                                    <button onclick="executeTrade('buy')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg text-sm">Buy</button>
+                                    <button onclick="executeTrade('sell')" class="bg-red-600/80 hover:bg-red-600 text-white font-bold py-2.5 rounded-xl transition shadow-lg text-sm">Sell</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg lg:col-span-2 flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 id="chart-asset-name" class="font-bold text-white text-lg">Slime Corp ($SLM)</h3>
+                                <p class="text-xs text-gray-400">Real-time simulated market price chart</p>
+                            </div>
+                            <div id="chart-price-change" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+0.00%</div>
+                        </div>
+                        <div class="h-80 w-full relative">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: SlimeBankInc -->
+            <div id="tab-bank" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg space-y-6">
+                        <div>
+                            <h3 class="font-bold text-white text-lg flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-vault text-teal-400"></i> SlimeBankInc Savings Vault
+                            </h3>
+                            <p class="text-xs text-gray-400">Secure your Tombux and earn high compound interest.</p>
+                        </div>
+                        <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800 space-y-2">
+                            <div class="flex justify-between text-sm"><span class="text-gray-400">Vault Balance:</span><span id="bank-savings-bal" class="font-extrabold text-teal-400">0.00 Ŧ</span></div>
+                            <div class="flex justify-between text-sm"><span class="text-gray-400">Unclaimed Interest:</span><span id="bank-interest-earned" class="font-bold text-emerald-400">0.00 Ŧ</span></div>
+                        </div>
+                        <div class="space-y-3">
+                            <input type="number" id="bank-amount-input" min="1" placeholder="Enter amount..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-teal-500">
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="bankAction('deposit')" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-2.5 rounded-xl transition text-sm">Deposit</button>
+                                <button onclick="bankAction('withdraw')" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl transition text-sm">Withdraw</button>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-800 pt-4 space-y-3">
+                            <h4 class="font-bold text-white text-sm">🔒 Locked Term Deposits</h4>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="createTermDeposit(3, 0.10)" class="bg-gray-900 hover:bg-gray-800 border border-gray-800 p-3 rounded-xl text-center transition">
+                                    <div class="text-xs text-teal-400 font-bold">3 Min</div>
+                                    <div class="text-[10px] text-gray-400 mt-1">+10% Yield</div>
+                                </button>
+                                <button onclick="createTermDeposit(5, 0.18)" class="bg-gray-900 hover:bg-gray-800 border border-gray-800 p-3 rounded-xl text-center transition">
+                                    <div class="text-xs text-teal-400 font-bold">5 Min</div>
+                                    <div class="text-[10px] text-gray-400 mt-1">+18% Yield</div>
+                                </button>
+                                <button onclick="createTermDeposit(10, 0.25)" class="bg-gray-900 hover:bg-gray-800 border border-gray-800 p-3 rounded-xl text-center transition">
+                                    <div class="text-xs text-teal-400 font-bold">10 Min</div>
+                                    <div class="text-[10px] text-gray-400 mt-1">+25% Yield</div>
+                                </button>
+                            </div>
+                            <div id="active-term-deposits" class="space-y-2 mt-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg space-y-6">
+                        <div>
+                            <h3 class="font-bold text-white text-lg flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-file-invoice-dollar text-blue-400"></i> Loans & Credit Overdraft
+                            </h3>
+                            <p class="text-xs text-gray-400">Borrow safely based on your AAA~C credit rating.</p>
+                        </div>
+                        <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800 space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-gray-400">Credit Rating:</span><span id="bank-credit-rating-badge" class="font-bold text-blue-400">AAA</span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Max Borrow Limit:</span><span id="bank-max-loan" class="font-bold text-white">0.00 Ŧ</span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Active Loan:</span><span id="bank-active-loan" class="font-bold text-red-400">0.00 Ŧ</span></div>
+                        </div>
+                        <div class="space-y-3">
+                            <input type="number" id="loan-amount-input" min="1" placeholder="Loan amount..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500">
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="applyLoan()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition text-sm">Borrow</button>
+                                <button onclick="repayLoan()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition text-sm">Repay Loan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: P2P Transfer -->
+            <div id="tab-transfer" class="tab-content hidden max-w-xl mx-auto space-y-6">
+                <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg space-y-6">
+                    <div>
+                        <h3 class="font-bold text-white text-lg flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-right-left text-emerald-400"></i> Instant P2P Transfer
+                        </h3>
+                        <p class="text-xs text-gray-400">Send Tombux to other online players instantly.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs text-gray-400 mb-1 block">Recipient Username</label>
+                            <input type="text" id="transfer-recipient" placeholder="Recipient username..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 mb-1 block">Amount (Ŧ)</label>
+                            <input type="number" id="transfer-amount" min="1" placeholder="0.00" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 mb-1 block">Category Memo</label>
+                            <select id="transfer-memo-category" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <option value="Payment">Payment / Trade</option>
+                                <option value="Gift">Gift / Tip</option>
+                                <option value="Loan Repayment">Loan Repayment</option>
+                                <option value="Investment">Investment Dividend</option>
+                            </select>
+                        </div>
+                        <button onclick="executeTransfer()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm">
+                            Transfer Tombux Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Jobs & Quests -->
+            <div id="tab-jobs" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="bg-emerald-500/10 text-emerald-400 p-3 rounded-xl w-fit mb-3 border border-emerald-500/20">
+                                <i class="fa-solid fa-hammer text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Tombux Mining Rig</h3>
+                            <p class="text-xs text-gray-400 mt-1">Click to mine Tombux. Features a 3-second cooldown to prevent abuse.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-800">
+                                <div id="mine-cooldown-bar" class="bg-emerald-500 h-full w-full transition-all duration-300"></div>
+                            </div>
+                            <button id="mine-btn" onclick="mineTombux()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-pickaxe"></i> Mine Pickaxe (+5 Ŧ)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="bg-blue-500/10 text-blue-400 p-3 rounded-xl w-fit mb-3 border border-blue-500/20">
+                                <i class="fa-solid fa-brain text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Math Challenge</h3>
+                            <p class="text-xs text-gray-400 mt-1">Solve math equations correctly to earn 15 Ŧ reward.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div id="math-question" class="bg-gray-900 p-3 rounded-xl text-center text-blue-400 font-mono font-bold text-base border border-gray-800">
+                                Loading...
+                            </div>
+                            <input type="number" id="math-answer-input" placeholder="Answer..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
+                            <button onclick="submitMathAnswer()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition text-sm">Submit Answer</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="bg-purple-500/10 text-purple-400 p-3 rounded-xl w-fit mb-3 border border-purple-500/20">
+                                <i class="fa-solid fa-gift text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Daily Check-in</h3>
+                            <p class="text-xs text-gray-400 mt-1">Claim your daily allowance stipend (100 Ŧ) every 24 hours.</p>
+                        </div>
+                        <button onclick="claimDailyBonus()" id="daily-bonus-btn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm">
+                            Claim Daily 100 Ŧ
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Leaderboard -->
+            <div id="tab-leaderboard" class="tab-content hidden max-w-2xl mx-auto space-y-6">
+                <div class="bg-carddark border border-gray-800 p-6 rounded-2xl shadow-lg space-y-4">
+                    <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-yellow-400"></i> Global Leaderboard (Top 10)
+                    </h3>
+                    <div id="leaderboard-list" class="space-y-2">
+                        <div class="text-center text-gray-500 py-6 text-sm">Loading leaderboard...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: Owner Panel (Slime) -->
+            <div id="tab-admin" class="tab-content hidden space-y-6">
+                <div class="bg-carddark border border-yellow-500/30 p-6 rounded-2xl shadow-lg space-y-6">
+                    <div>
+                        <h3 class="font-bold text-yellow-400 text-lg flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-shield-halved"></i> Web Owner Rigging Panel (Slime Control)
+                        </h3>
+                        <p class="text-xs text-gray-400">Full owner privileges to broadcast ticker alerts and pump/dump assets.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-900/60 p-5 rounded-xl border border-gray-800 space-y-4">
+                            <h4 class="font-bold text-white text-sm">Market Rigging Commands</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-xs text-gray-400 mb-1 block">Target Asset</label>
+                                    <select id="admin-target-asset" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm">
+                                        <option value="SLM">Slime Corp ($SLM)</option>
+                                        <option value="TBX">Tombux Index ($TBX)</option>
+                                        <option value="RISK">Crypto Risk ($RISK)</option>
+                                        <option value="BANK">SlimeBank Shares ($BANK)</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button onclick="adminRigMarket('pump')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition text-xs">🚀 Pump (+25%)</button>
+                                    <button onclick="adminRigMarket('dump')" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl transition text-xs">📉 Dump (-25%)</button>
+                                    <button onclick="adminRigMarket('crash')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl transition text-xs">💥 Crash (-70%)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900/60 p-5 rounded-xl border border-gray-800 space-y-4">
+                            <h4 class="font-bold text-white text-sm">Global Ticker Announcement</h4>
+                            <div class="space-y-3">
+                                <input type="text" id="admin-ticker-input" placeholder="Enter breaking news headline..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-yellow-500">
+                                <button onclick="adminBroadcastNews()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-gray-950 font-bold py-2.5 rounded-xl transition text-sm">
+                                    Broadcast News Ticker
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-carddark border border-gray-800 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-6 relative">
+            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center">
+                <h3 id="auth-modal-title" class="text-xl font-bold text-white">Log In to Tombux</h3>
+                <p class="text-xs text-gray-400 mt-1">Access SlimeBankInc & multiplayer economy</p>
+            </div>
+
+            <!-- OAuth Buttons -->
+            <div class="space-y-3">
+                <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-900 font-semibold py-3 rounded-xl transition flex items-center justify-center gap-3 text-sm shadow">
+                    <i class="fa-brands fa-google text-red-500"></i> Continue with Google
+                </button>
+            </div>
+
+            <div class="flex items-center my-4">
+                <div class="flex-grow border-t border-gray-800"></div>
+                <span class="px-3 text-xs text-gray-500 uppercase">Or with email</span>
+                <div class="flex-grow border-t border-gray-800"></div>
+            </div>
+
+            <!-- Email Form -->
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div id="username-field-container" class="hidden">
+                    <label class="text-xs text-gray-400 mb-1 block">Username</label>
+                    <input type="text" id="auth-username" placeholder="Choose unique username..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 mb-1 block">Email Address</label>
+                    <input type="email" id="auth-email" required placeholder="name@example.com" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 mb-1 block">Password</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="flex items-center justify-between text-xs text-gray-400">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="auth-remember" class="rounded bg-gray-900 border-gray-800 text-emerald-600 focus:ring-0"> Remember Me
+                    </label>
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm">
+                    Log In
+                </button>
+            </form>
+
+            <div class="text-center text-xs text-gray-400">
+                <span id="auth-switch-text">Don't have an account?</span>
+                <button onclick="toggleAuthMode()" id="auth-switch-btn" class="text-emerald-400 font-bold ml-1 hover:underline">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK v11 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, addTimestamp, increment, arrayUnion, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // Your Firebase Configuration (Pasted from your Firebase Console)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAap55mrGm-MX2zmSOsYmRs_DUo5PpbajE",
+            authDomain: "webdata-45d04.firebaseapp.com",
+            projectId: "webdata-45d04",
+            storageBucket: "webdata-45d04.firebasestorage.app",
+            messagingSenderId: "340113131544",
+            appId: "1:340113131544:web:ed60568e1a6ce1a7bf5b6d",
+            measurementId: "G-1TL8GNRHN2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.GoogleProvider = new GoogleAuthProvider();
+        window.authMethods = {
+            signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signOut, onAuthStateChanged,
+            setPersistence, browserLocalPersistence, browserSessionPersistence, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, query, orderBy, limit, getDocs
+        };
+    </script>
+
+    <!-- Main Game Logic Script -->
+    <script>
+        let currentUser = null;
+        let userData = {
+            balance: 1000,
+            savings: 0,
+            savingsInterest: 0,
+            loan: 0,
+            creditScore: 750,
+            portfolio: { SLM: 0, TBX: 0, RISK: 0, BANK: 0 },
+            termDeposits: []
+        };
+        let activeTab = 'dashboard';
+        let isSignupMode = false;
+        let selectedAsset = 'SLM';
+        let stockChartInstance = null;
+        let mineCooldown = false;
+
+        const assetsData = {
+            SLM: { name: 'Slime Corp', symbol: 'SLM', price: 45.50, history: [40, 42, 41, 44, 45.5], color: '#10b981' },
+            TBX: { name: 'Tombux Index', symbol: 'TBX', price: 120.00, history: [115, 118, 116, 119, 120], color: '#3b82f6' },
+            RISK: { name: 'Crypto Risk', symbol: 'RISK', price: 12.80, history: [15, 14, 13.5, 13, 12.8], color: '#ef4444' },
+            BANK: { name: 'SlimeBank Shares', symbol: 'BANK', price: 88.20, history: [82, 84, 85, 87, 88.2], color: '#14b8a6' }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initStockChart();
+            renderStockSelector();
+            startMarketSimulator();
+
+            // Listen to Auth State
+            setTimeout(() => {
+                if (window.firebaseAuth) {
+                    window.authMethods.onAuthStateChanged(window.firebaseAuth, async (user) => {
+                        if (user) {
+                            currentUser = user;
+                            await loadUserData(user.uid, user.email);
+                            document.getElementById('welcome-banner').classList.add('hidden');
+                            document.getElementById('main-app-container').classList.remove('hidden');
+                            document.getElementById('user-wallet-preview').classList.remove('hidden');
+                            document.getElementById('auth-action-area').innerHTML = `
+                                <span class="text-xs text-emerald-400 font-bold mr-2"><i class="fa-solid fa-circle text-[8px] mr-1"></i>${userData.username || user.email}</span>
+                                <button onclick="logout()" class="text-gray-400 hover:text-white text-xs bg-gray-800 px-3 py-1.5 rounded-lg transition">Log Out</button>
+                            `;
+                            if (userData.username === 'Slime' || user.email.includes('admin')) {
+                                document.getElementById('admin-tab-btn').classList.remove('hidden');
+                                document.getElementById('admin-badge-banner').classList.remove('hidden');
+                            }
+                            updateDashboardUI();
+                        } else {
+                            currentUser = null;
+                            document.getElementById('welcome-banner').classList.remove('hidden');
+                            document.getElementById('main-app-container').classList.add('hidden');
+                            document.getElementById('user-wallet-preview').classList.add('hidden');
+                            document.getElementById('auth-action-area').innerHTML = `
+                                <button onclick="openAuthModal('login')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-4 py-2 rounded-xl transition shadow-lg shadow-emerald-900/30">
+                                    <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Log In / Sign Up
+                                </button>
+                            `;
+                        }
+                    });
+                }
+            }, 1000);
+
+            generateMathQuestion();
+        });
+
+        async function loadUserData(uid, email) {
+            const userRef = window.authMethods.doc(window.firebaseDb, "users", uid);
+            const snap = await window.authMethods.getDoc(userRef);
+            if (snap.exists()) {
+                userData = snap.data();
+            } else {
+                userData = {
+                    username: email.split('@')[0] + Math.floor(Math.random()*1000),
+                    email: email,
+                    balance: 1000,
+                    savings: 0,
+                    savingsInterest: 0,
+                    loan: 0,
+                    creditScore: 750,
+                    portfolio: { SLM: 0, TBX: 0, RISK: 0, BANK: 0 },
+                    termDeposits: [],
+                    activities: []
+                };
+                await window.authMethods.setDoc(userRef, userData);
+            }
+        }
+
+        async function saveUserData() {
+            if (!currentUser) return;
+            const userRef = window.authMethods.doc(window.firebaseDb, "users", currentUser.uid);
+            await window.authMethods.setDoc(userRef, userData, { merge: true });
+        }
+
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-emerald-400', 'bg-emerald-500/10');
+                btn.classList.add('text-gray-400');
+            });
+            event.currentTarget.classList.add('text-emerald-400', 'bg-emerald-500/10');
+            event.currentTarget.classList.remove('text-gray-400');
+            if (tabId === 'leaderboard') loadLeaderboard();
+        }
+
+        function openAuthModal(mode) {
+            isSignupMode = (mode === 'signup');
+            document.getElementById('auth-modal-title').innerText = isSignupMode ? 'Create Tombux Account' : 'Log In to Tombux';
+            document.getElementById('auth-submit-btn').innerText = isSignupMode ? 'Sign Up' : 'Log In';
+            document.getElementById('auth-switch-text').innerText = isSignupMode ? 'Already have an account?' : "Don't have an account?";
+            document.getElementById('auth-switch-btn').innerText = isSignupMode ? 'Log In' : 'Sign Up';
+            if (isSignupMode) {
+                document.getElementById('username-field-container').classList.remove('hidden');
+            } else {
+                document.getElementById('username-field-container').classList.add('hidden');
+            }
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            isSignupMode = !isSignupMode;
+            openAuthModal(isSignupMode ? 'signup' : 'login');
+        }
+
+        async function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const remember = document.getElementById('auth-remember').checked;
+            const usernameInput = document.getElementById('auth-username').value;
+
+            try {
+                await window.authMethods.setPersistence(window.firebaseAuth, remember ? window.authMethods.browserLocalPersistence : window.authMethods.browserSessionPersistence);
+                if (isSignupMode) {
+                    const cred = await window.authMethods.createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                    currentUser = cred.user;
+                    userData.username = usernameInput || email.split('@')[0];
+                    userData.email = email;
+                    await saveUserData();
+                } else {
+                    const cred = await window.authMethods.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                    currentUser = cred.user;
+                }
+                closeAuthModal();
+            } catch (err) {
+                alert("Authentication Error: " + err.message);
+            }
+        }
+
+        async function loginWithGoogle() {
+            try {
+                const res = await window.authMethods.signInWithPopup(window.firebaseAuth, window.GoogleProvider);
+                currentUser = res.user;
+                closeAuthModal();
+            } catch (err) {
+                alert("Google Sign-In Error: " + err.message);
+            }
+        }
+
+        async function logout() {
+            await window.authMethods.signOut(window.firebaseAuth);
+        }
+
+        function updateDashboardUI() {
+            document.getElementById('header-balance').innerText = userData.balance.toFixed(2) + ' Ŧ';
+            document.getElementById('dash-balance').innerText = userData.balance.toFixed(2) + ' Ŧ';
+            document.getElementById('dash-savings').innerText = userData.savings.toFixed(2) + ' Ŧ';
+            document.getElementById('dash-credit-score').innerText = userData.creditScore;
+            
+            let rating = 'AAA';
+            if (userData.creditScore < 500) rating = 'C';
+            else if (userData.creditScore < 600) rating = 'B';
+            else if (userData.creditScore < 700) rating = 'A';
+            document.getElementById('dash-credit-rating').innerText = rating;
+            document.getElementById('bank-credit-rating-badge').innerText = rating;
+
+            let netWorth = userData.balance + userData.savings;
+            for (let s in userData.portfolio) {
+                netWorth += (userData.portfolio[s] || 0) * assetsData[s].price;
+            }
+            document.getElementById('dash-networth').innerText = netWorth.toFixed(2) + ' Ŧ';
+            document.getElementById('profile-username').innerText = userData.username || 'User';
+            document.getElementById('profile-email').innerText = userData.email || currentUser?.email || '--';
+            document.getElementById('profile-role').innerText = (userData.username === 'Slime') ? 'Web Owner 👑' : 'User';
+
+            document.getElementById('bank-savings-bal').innerText = userData.savings.toFixed(2) + ' Ŧ';
+            document.getElementById('bank-active-loan').innerText = (userData.loan || 0).toFixed(2) + ' Ŧ';
+            document.getElementById('bank-max-loan').innerText = (userData.creditScore * 5).toFixed(2) + ' Ŧ';
+
+            let actHtml = '';
+            if (userData.activities && userData.activities.length > 0) {
+                userData.activities.slice().reverse().forEach(act => {
+                    actHtml += `<div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800 text-xs flex justify-between items-center">
+                        <span class="text-gray-300">${act.text}</span>
+                        <span class="text-gray-500">${new Date(act.time).toLocaleTimeString()}</span>
+                    </div>`;
+                });
+            } else {
+                actHtml = '<div class="text-center text-gray-500 py-6 text-sm">No activity records yet</div>';
+            }
+            document.getElementById('recent-activity-list').innerHTML = actHtml;
+            updateTradePanel();
+        }
+
+        function logActivity(text) {
+            if (!userData.activities) userData.activities = [];
+            userData.activities.push({ text, time: Date.now() });
+            if (userData.activities.length > 20) userData.activities.shift();
+        }
+
+        // Stock Market & Chart
+        function initStockChart() {
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            stockChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1m', '2m', '3m', '4m', 'Now'],
+                    datasets: [{
+                        label: 'Price',
+                        data: assetsData[selectedAsset].history,
+                        borderColor: assetsData[selectedAsset].color,
+                        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af', font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function renderStockSelector() {
+            let html = '';
+            for (let key in assetsData) {
+                let asset = assetsData[key];
+                let isSel = (selectedAsset === key);
+                html += `<div onclick="selectAsset('${key}')" class="p-3 rounded-xl border cursor-pointer transition flex justify-between items-center ${isSel ? 'bg-emerald-500/10 border-emerald-500/40 text-white' : 'bg-gray-900/40 border-gray-800 text-gray-400 hover:border-gray-700'}">
+                    <div>
+                        <div class="font-bold text-sm">${asset.name}</div>
+                        <div class="text-xs text-gray-500">$${asset.symbol}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-extrabold text-white">${asset.price.toFixed(2)} Ŧ</div>
+                    </div>
+                </div>`;
+            }
+            document.getElementById('stock-selector-list').innerHTML = html;
+        }
+
+        function selectAsset(key) {
+            selectedAsset = key;
+            renderStockSelector();
+            updateTradePanel();
+            if (stockChartInstance) {
+                stockChartInstance.data.datasets[0].data = assetsData[key].history;
+                stockChartInstance.data.datasets[0].borderColor = assetsData[key].color;
+                stockChartInstance.update();
+            }
+            document.getElementById('chart-asset-name').innerText = `${assetsData[key].name} ($${assetsData[key].symbol})`;
+        }
+
+        function updateTradePanel() {
+            let asset = assetsData[selectedAsset];
+            document.getElementById('trade-panel-title').innerText = `Trade $${asset.symbol}`;
+            document.getElementById('trade-current-price').innerText = asset.price.toFixed(2) + ' Ŧ';
+            let shares = parseInt(document.getElementById('trade-shares-input').value) || 0;
+            document.getElementById('trade-total-cost').innerText = (shares * asset.price).toFixed(2) + ' Ŧ';
+            document.getElementById('trade-user-shares').innerText = userData.portfolio[selectedAsset] || 0;
+        }
+
+        document.getElementById('trade-shares-input').addEventListener('input', updateTradePanel);
+
+        function startMarketSimulator() {
+            setInterval(() => {
+                for (let key in assetsData) {
+                    let asset = assetsData[key];
+                    let change = (Math.random() - 0.48) * (asset.price * 0.03);
+                    asset.price = Math.max(1, asset.price + change);
+                    asset.history.push(asset.price);
+                    if (asset.history.length > 10) asset.history.shift();
+                }
+                renderStockSelector();
+                updateTradePanel();
+                if (stockChartInstance) {
+                    stockChartInstance.data.datasets[0].data = assetsData[selectedAsset].history;
+                    stockChartInstance.update();
+                }
+            }, 5000);
+        }
+
+        async function executeTrade(type) {
+            let shares = parseInt(document.getElementById('trade-shares-input').value) || 0;
+            if (shares <= 0) return alert("Invalid shares amount!");
+            let asset = assetsData[selectedAsset];
+            let total = shares * asset.price;
+
+            if (type === 'buy') {
+                if (userData.balance < total) return alert("Insufficient Tombux balance!");
+                userData.balance -= total;
+                userData.portfolio[selectedAsset] = (userData.portfolio[selectedAsset] || 0) + shares;
+                logActivity(`Bought ${shares} shares of $${selectedAsset} for ${total.toFixed(2)} Ŧ`);
+            } else {
+                let owned = userData.portfolio[selectedAsset] || 0;
+                if (owned < shares) return alert("You don't own that many shares!");
+                userData.portfolio[selectedAsset] -= shares;
+                userData.balance += total;
+                logActivity(`Sold ${shares} shares of $${selectedAsset} for ${total.toFixed(2)} Ŧ`);
+            }
+            await saveUserData();
+            updateDashboardUI();
+        }
+
+        // Bank Operations
+        async function bankAction(type) {
+            let amt = parseFloat(document.getElementById('bank-amount-input').value) || 0;
+            if (amt <= 0) return alert("Enter valid amount!");
+            if (type === 'deposit') {
+                if (userData.balance < amt) return alert("Insufficient cash balance!");
+                userData.balance -= amt;
+                userData.savings += amt;
+                logActivity(`Deposited ${amt.toFixed(2)} Ŧ into SlimeBankInc`);
+            } else {
+                if (userData.savings < amt) return alert("Insufficient vault balance!");
+                userData.savings -= amt;
+                userData.balance += amt;
+                logActivity(`Withdrew ${amt.toFixed(2)} Ŧ from SlimeBankInc`);
+            }
+            await saveUserData();
+            updateDashboardUI();
+        }
+
+        async function createTermDeposit(mins, yieldRate) {
+            let amt = parseFloat(document.getElementById('bank-amount-input').value) || 0;
+            if (amt <= 0 || userData.balance < amt) return alert("Invalid amount for term deposit!");
+            userData.balance -= amt;
+            let payout = amt * (1 + yieldRate);
+            userData.termDeposits.push({ amount: amt, payout, endTime: Date.now() + (mins * 60 * 1000) });
+            logActivity(`Created ${mins}-min term deposit of ${amt.toFixed(2)} Ŧ`);
+            await saveUserData();
+            updateDashboardUI();
+            renderTermDeposits();
+        }
+
+        function renderTermDeposits() {
+            let html = '';
+            let now = Date.now();
+            if (userData.termDeposits) {
+                userData.termDeposits.forEach((dep, idx) => {
+                    let left = Math.max(0, Math.ceil((dep.endTime - now) / 1000));
+                    html += `<div class="bg-gray-900 p-3 rounded-xl border border-gray-800 flex justify-between items-center text-xs">
+                        <div>
+                            <div class="font-bold text-teal-400">${dep.amount.toFixed(2)} Ŧ ➔ ${dep.payout.toFixed(2)} Ŧ</div>
+                            <div class="text-gray-500">Time left: ${left}s</div>
+                        </div>
+                        ${left === 0 ? `<button onclick="claimTermDeposit(${idx})" class="bg-teal-600 px-3 py-1 rounded-lg text-white font-bold">Claim</button>` : `<span class="text-gray-400">Locked</span>`}
+                    </div>`;
+                });
+            }
+            document.getElementById('active-term-deposits').innerHTML = html;
+        }
+
+        async function claimTermDeposit(idx) {
+            let dep = userData.termDeposits[idx];
+            if (Date.now() >= dep.endTime) {
+                userData.balance += dep.payout;
+                logActivity(`Claimed term deposit payout: ${dep.payout.toFixed(2)} Ŧ`);
+                userData.termDeposits.splice(idx, 1);
+                await saveUserData();
+                updateDashboardUI();
+                renderTermDeposits();
+            }
+        }
+
+        setInterval(renderTermDeposits, 1000);
+
+        async function applyLoan() {
+            let amt = parseFloat(document.getElementById('loan-amount-input').value) || 0;
+            let maxLoan = userData.creditScore * 5;
+            if (amt <= 0 || amt > maxLoan) return alert(`Invalid loan amount! Max allowed: ${maxLoan} Ŧ`);
+            userData.loan = (userData.loan || 0) + amt;
+            userData.balance += amt;
+            logActivity(`Took loan of ${amt.toFixed(2)} Ŧ from SlimeBankInc`);
+            await saveUserData();
+            updateDashboardUI();
+        }
+
+        async function repayLoan() {
+            let amt = parseFloat(document.getElementById('loan-amount-input').value) || 0;
+            if (amt <= 0 || userData.balance < amt) return alert("Invalid repayment amount!");
+            let loan = userData.loan || 0;
+            if (amt > loan) amt = loan;
+            userData.balance -= amt;
+            userData.loan -= amt;
+            logActivity(`Repaid loan amount of ${amt.toFixed(2)} Ŧ`);
+            await saveUserData();
+            updateDashboardUI();
+        }
+
+        // P2P Transfer
+        async function executeTransfer() {
+            let recipientName = document.getElementById('transfer-recipient').value.trim();
+            let amount = parseFloat(document.getElementById('transfer-amount').value) || 0;
+            let memo = document.getElementById('transfer-memo-category').value;
+
+            if (!recipientName || amount <= 0) return alert("Please enter valid recipient and amount!");
+            if (userData.balance < amount) return alert("Insufficient balance!");
+
+            // Query Firestore for recipient
+            const usersRef = window.authMethods.collection(window.firebaseDb, "users");
+            const q = window.authMethods.query(usersRef);
+            const snapshot = await window.authMethods.getDocs(q);
+            let recipientDocId = null;
+            let recipientData = null;
+
+            snapshot.forEach(docSnap => {
+                let d = docSnap.data();
+                if (d.username === recipientName) {
+                    recipientDocId = docSnap.id;
+                    recipientData = d;
+                }
+            });
+
+            if (!recipientDocId) return alert("Recipient username not found!");
+
+            userData.balance -= amount;
+            logActivity(`Transferred ${amount.toFixed(2)} Ŧ to @${recipientName} (${memo})`);
+            await saveUserData();
+
+            // Update recipient
+            recipientData.balance = (recipientData.balance || 0) + amount;
+            if (!recipientData.activities) recipientData.activities = [];
+            recipientData.activities.push({ text: `Received ${amount.toFixed(2)} Ŧ from @${userData.username} (${memo})`, time: Date.now() });
+            
+            const recRef = window.authMethods.doc(window.firebaseDb, "users", recipientDocId);
+            await window.authMethods.setDoc(recRef, recipientData, { merge: true });
+
+            alert("Transfer successful!");
+            updateDashboardUI();
+        }
+
+        // Jobs & Quests
+        async function mineTombux() {
+            if (mineCooldown) return;
+            mineCooldown = true;
+            let bar = document.getElementById('mine-cooldown-bar');
+            bar.style.width = '0%';
+            
+            userData.balance += 5;
+            logActivity("Mined Tombux (+5 Ŧ)");
+            await saveUserData();
+            updateDashboardUI();
+
+            let timeLeft = 30;
+            let interval = setInterval(() => {
+                timeLeft -= 1;
+                bar.style.width = ((30 - timeLeft) / 30 * 100) + '%';
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    mineCooldown = false;
+                }
+            }, 100);
+        }
+
+        let currentMathAns = 0;
+        function generateMathQuestion() {
+            let a = Math.floor(Math.random() * 20) + 1;
+            let b = Math.floor(Math.random() * 20) + 1;
+            let ops = ['+', '-', '*'];
+            let op = ops[Math.floor(Math.random() * ops.length)];
+            currentMathAns = eval(`${a} ${op} ${b}`);
+            document.getElementById('math-question').innerText = `${a} ${op} ${b} = ?`;
+        }
+
+        async function submitMathAnswer() {
+            let ans = parseFloat(document.getElementById('math-answer-input').value);
+            if (ans === currentMathAns) {
+                userData.balance += 15;
+                logActivity("Solved math challenge (+15 Ŧ)");
+                await saveUserData();
+                updateDashboardUI();
+                alert("Correct! Earned 15 Ŧ");
+                document.getElementById('math-answer-input').value = '';
+                generateMathQuestion();
+            } else {
+                alert("Incorrect answer! Try again.");
+            }
+        }
+
+        async function claimDailyBonus() {
+            userData.balance += 100;
+            logActivity("Claimed daily check-in stipend (+100 Ŧ)");
+            await saveUserData();
+            updateDashboardUI();
+            alert("Claimed 100 Ŧ daily bonus successfully!");
+        }
+
+        // Leaderboard
+        async function loadLeaderboard() {
+            const usersRef = window.authMethods.collection(window.firebaseDb, "users");
+            const snapshot = await window.authMethods.getDocs(usersRef);
+            let list = [];
+            snapshot.forEach(docSnap => {
+                let d = docSnap.data();
+                let net = (d.balance || 0) + (d.savings || 0);
+                list.push({ username: d.username || 'User', netWorth: net, creditScore: d.creditScore || 750 });
+            });
+            list.sort((a, b) => b.netWorth - a.netWorth);
+
+            let html = '';
+            list.slice(0, 10).forEach((u, idx) => {
+                html += `<div class="bg-gray-900 p-3 rounded-xl border border-gray-800 flex justify-between items-center text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-yellow-400">#${idx + 1}</span>
+                        <span class="text-white font-bold">@${u.username}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-black text-purple-400">${u.netWorth.toFixed(2)} Ŧ</div>
+                        <div class="text-[10px] text-gray-500">Credit Score: ${u.creditScore}</div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('leaderboard-list').innerHTML = html;
+        }
+
+        // Owner Controls
+        async function adminRigMarket(action) {
+            let target = document.getElementById('admin-target-asset').value;
+            let asset = assetsData[target];
+            if (action === 'pump') asset.price *= 1.25;
+            if (action === 'dump') asset.price *= 0.75;
+            if (action === 'crash') asset.price *= 0.30;
+            renderStockSelector();
+            alert(`Owner Command Executed: ${action.toUpperCase()} on $${target}!`);
+        }
+
+        async function adminBroadcastNews() {
+            let msg = document.getElementById('admin-ticker-input').value.trim();
+            if (!msg) return alert("Enter news headline!");
+            document.getElementById('ticker-text').innerText = msg;
+            alert("Breaking news broadcasted to all active players!");
+            document.getElementById('admin-ticker-input').value = '';
+        }
+    </script>
+</body>
+</html>
