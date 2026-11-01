@@ -670,7 +670,7 @@
 
         async function loginWithGoogle() {
             if (!window.authMethods || !window.authMethods.signInWithPopup) {
-                return alert("Firebase 系統仍在載入中，請稍等 2 秒後再試一次！");
+                return alert("Firebase system loadijg try 2 sec later");
            }
             try {
                 const res = await window.authMethods.signInWithPopup(window.firebaseAuth, window.GoogleProvider);
