@@ -1016,13 +1016,38 @@
             }
         }
 
-        async function claimDailyBonus() {
-            userData.balance += 100;
-            logActivity("Claimed daily check-in stipend (+100 Ŧ)");
-            await saveUserData();
-            updateDashboardUI();
-            alert("Claimed 100 Ŧ daily bonus successfully!");
+      async function claimDailyReward() {
+        if (!currentUser) return alert("請先登入帳號！");
+    
+        const now = Date.now(); // 取得目前的毫秒時間戳記
+        const cooldownTime = 24 * 60 * 60 * 1000; // 24小時的毫秒數
+    
+        // 檢查資料庫記錄的上次領取時間
+        const lastClaim = userData.lastDailyClaim || 0;
+        
+        if (now - lastClaim < cooldownTime) {
+            const hoursLeft = Math.ceil((cooldownTime - (now - lastClaim)) / (60 * 60 * 1000));
+            return alert(`冷卻中！請等待 ${hoursLeft} 小時後再領取每日獎勵。`);
         }
+    
+        // 扣除或更新資料
+        userData.balance = (userData.balance || 0) + 500; // 假設每日獎勵 500 Ŧ
+        userData.lastDailyClaim = now; // 記錄本次領取時間
+    
+        try {
+            // 同步寫入 Firestore 資料庫
+            const userRef = window.authMethods.doc(window.firebaseDB, "users", currentUser.uid);
+            await window.authMethods.updateDoc(userRef, {
+                balance: userData.balance,
+                lastDailyClaim: userData.lastDailyClaim
+            });
+    
+                alert("成功領取 500 Ŧ 每日獎勵！");
+                if (typeof updateDashboardUI === "function") updateDashboardUI();
+            } catch (err) {
+                alert("領取失敗: " + err.message);
+            }
+        }    
 
         // Leaderboard
         async function loadLeaderboard() {
