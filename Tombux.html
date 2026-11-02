@@ -1101,11 +1101,12 @@
         }
 
         // Username
+       // Username
         async function changeUsername() {
-            if (!currentUser) return alert("Log in FIRST AHHHH！");
-            const newName = prompt("Enter your new username：", userData.username || "");
+            if (!currentUser) return alert("Log in FIRST AHHHH! ");
+            const newName = prompt("Enter your new username :", userData.username || "");
             if (!newName || !newName.trim()) return;
-    
+            
             const trimmedName = newName.trim();
             const lowerCaseName = trimmedName.toLowerCase(); // 轉成小寫用來比對防撞名
 
@@ -1115,10 +1116,10 @@
             const querySnapshot = await window.authMethods.getDocs(q);
 
             if (!querySnapshot.empty) {
-                return alert("This user name have been used (or "stolen" lol)");
+                return alert("This user name have been used (or \"stolen\" lol)");
             }
 
-            // 2. 沒人用過就同時儲存「原本的大小寫」與「純小寫版本」到資料庫
+    // 2. 沒人用過就同時儲存「原本的大小寫」與「純小寫版本」到資料庫
             userData.username = trimmedName;
             const userRef = window.authMethods.doc(window.firebaseDB, "users", currentUser.uid);
             await window.authMethods.updateDoc(userRef, { 
@@ -1126,7 +1127,7 @@
                 usernameLower: lowerCaseName // 專門用來防撞名的欄位
             });
     
-            alert("Username edit successful！");
+            alert("Username edit successful! ");
             location.reload();
         }
     </script>
