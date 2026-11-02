@@ -1018,7 +1018,7 @@
         }
 
       async function claimDailyReward() {
-        if (!currentUser) return alert("請先登入帳號！");
+        if (!currentUser) return alert("Pls log in first");
     
         const now = Date.now(); // 取得目前的毫秒時間戳記
         const cooldownTime = 24 * 60 * 60 * 1000; // 24小時的毫秒數
@@ -1028,7 +1028,7 @@
         
         if (now - lastClaim < cooldownTime) {
             const hoursLeft = Math.ceil((cooldownTime - (now - lastClaim)) / (60 * 60 * 1000));
-            return alert(`冷卻中！請等待 ${hoursLeft} 小時後再領取每日獎勵。`);
+            return alert(`In cooldown bruh don't be greedy claim after ${hoursLeft} hours。`);
         }
     
         // 扣除或更新資料
@@ -1043,10 +1043,10 @@
                 lastDailyClaim: userData.lastDailyClaim
             });
     
-                alert("成功領取 500 Ŧ 每日獎勵！");
+                alert("Successfully claimed 500 Ŧ Daily reward！");
                 if (typeof updateDashboardUI === "function") updateDashboardUI();
             } catch (err) {
-                alert("領取失敗: " + err.message);
+                alert("CLAIM FAILURE ERRRRR: " + err.message);
             }
         }    
 
