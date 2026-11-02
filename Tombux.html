@@ -1102,28 +1102,31 @@
 
         // Username
         async function changeUsername() {
-            if (!currentUser) return alert("LOGGG INNNN");
+            if (!currentUser) return alert("Log in FIRST AHHHH！");
             const newName = prompt("Enter your new username：", userData.username || "");
             if (!newName || !newName.trim()) return;
-            
+    
             const trimmedName = newName.trim();
-        
-            // 1. 先去資料庫查詢有沒有其他人已經用這個名字了
+            const lowerCaseName = trimmedName.toLowerCase(); // 轉成小寫用來比對防撞名
+
+            // 1. 檢查資料庫有沒有人用過這個名字（大小寫視為相同）
             const usersRef = window.authMethods.collection(window.firebaseDB, "users");
-            const q = window.authMethods.query(usersRef, window.authMethods.where("username", "==", trimmedName));
+            const q = window.authMethods.query(usersRef, window.authMethods.where("usernameLower", "==", lowerCaseName));
             const querySnapshot = await window.authMethods.getDocs(q);
-        
+
             if (!querySnapshot.empty) {
-                // 如果查得到資料，代表這個名字已經被人註冊走了！
-                return alert("Sorry it have been used");
+                return alert("This user name have been used (or "stolen" lol)");
             }
-        
-            // 2. 如果沒人用，才進行更新
+
+            // 2. 沒人用過就同時儲存「原本的大小寫」與「純小寫版本」到資料庫
             userData.username = trimmedName;
             const userRef = window.authMethods.doc(window.firebaseDB, "users", currentUser.uid);
-            await window.authMethods.updateDoc(userRef, { username: trimmedName });
-            
-            alert("Username edit success");
+            await window.authMethods.updateDoc(userRef, { 
+                username: trimmedName,
+                usernameLower: lowerCaseName // 專門用來防撞名的欄位
+            });
+    
+            alert("Username edit successful！");
             location.reload();
         }
     </script>
