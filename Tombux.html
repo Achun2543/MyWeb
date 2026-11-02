@@ -1102,15 +1102,28 @@
 
         // Username
         async function changeUsername() {
-            if (!currentUser) return alert("LOG IN FIRST");
-            const newName = prompt("Please enter your name：", userData.username || "");
+            if (!currentUser) return alert("LOGGG INNNN");
+            const newName = prompt("Enter your new username：", userData.username || "");
             if (!newName || !newName.trim()) return;
             
-            userData.username = newName.trim();
+            const trimmedName = newName.trim();
+        
+            // 1. 先去資料庫查詢有沒有其他人已經用這個名字了
+            const usersRef = window.authMethods.collection(window.firebaseDB, "users");
+            const q = window.authMethods.query(usersRef, window.authMethods.where("username", "==", trimmedName));
+            const querySnapshot = await window.authMethods.getDocs(q);
+        
+            if (!querySnapshot.empty) {
+                // 如果查得到資料，代表這個名字已經被人註冊走了！
+                return alert("Sorry it have been used");
+            }
+        
+            // 2. 如果沒人用，才進行更新
+            userData.username = trimmedName;
             const userRef = window.authMethods.doc(window.firebaseDB, "users", currentUser.uid);
-            await window.authMethods.updateDoc(userRef, { username: userData.username });
-    
-            alert("Edit success+");
+            await window.authMethods.updateDoc(userRef, { username: trimmedName });
+            
+            alert("Username edit success");
             location.reload();
         }
     </script>
